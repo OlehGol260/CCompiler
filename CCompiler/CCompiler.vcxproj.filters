@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\core">
+      <UniqueIdentifier>{be9fb331-0e71-4c71-8a23-af0cb5cf7172}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\context">
+      <UniqueIdentifier>{e2ba20b7-06e2-42d0-b2a1-7b640979bc0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\lexer">
+      <UniqueIdentifier>{9f1d6efc-23e4-4426-8183-96a2e14f571d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\lexem">
+      <UniqueIdentifier>{4cde765b-c271-4ed5-9e3b-f2df7b39a770}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\parser">
+      <UniqueIdentifier>{c68e0f06-6013-44ab-a19c-c36b0845dd5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\output">
+      <UniqueIdentifier>{db73c6b1-0b21-4cd1-9846-d7e1f866be77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\grammar">
+      <UniqueIdentifier>{052a9108-9b98-42b3-b0a8-8f9c4c42da2a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lexer.cpp">
+      <Filter>Source Files\core\lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="grammar.cpp">
+      <Filter>Source Files\core\grammar</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="lexem.h">
+      <Filter>Source Files\core\lexem</Filter>
+    </ClInclude>
+    <ClInclude Include="context.h">
+      <Filter>Source Files\core\context</Filter>
+    </ClInclude>
+    <ClInclude Include="lexer.h">
+      <Filter>Source Files\core\lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="output.h">
+      <Filter>Source Files\output</Filter>
+    </ClInclude>
+    <ClInclude Include="type_name_traits.h">
+      <Filter>Source Files\output</Filter>
+    </ClInclude>
+    <ClInclude Include="grammar.h">
+      <Filter>Source Files\core\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="enums.h">
+      <Filter>Source Files\core\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="typedefs.h">
+      <Filter>Source Files\core\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Source Files\core\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="bracket.h">
+      <Filter>Source Files\core\grammar</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
