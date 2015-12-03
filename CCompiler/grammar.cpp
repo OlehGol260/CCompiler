@@ -1,8 +1,11 @@
 #include "grammar.h"
 #include "utils.h"
 
-const Bracket Grammar::kParentheses_ = { "(", ")" };
-const Bracket Grammar::kBraces_ = { "{", "}" };
+
+const std::string Grammar::kOpenBrace_ = "{";
+const std::string Grammar::kCloseBrace_ = "}";
+const std::string Grammar::kOpenParenthesis_ = "(";
+const std::string Grammar::kCloseParenthesis_ = ")";
 
 const std::vector<std::string> Grammar::kReservedWords_ = {
 	"for",
@@ -68,8 +71,8 @@ bool Grammar::IsAssignment(const std::string& to_check)
 
 bool Grammar::IsBracket(const std::string& to_check)
 {
-	return kParentheses_.IsOpen(to_check) || kParentheses_.IsClose(to_check) ||
-		kBraces_.IsOpen(to_check) || kBraces_.IsClose(to_check);
+	return IsOpenParenthesis(to_check) ||IsCloseParenthesis(to_check) ||
+		IsOpenBrace(to_check) || IsCloseBrace(to_check);
 }
 
 bool Grammar::IsPunctuator(const std::string& to_check)
@@ -82,13 +85,36 @@ bool Grammar::IsType(const std::string& to_check)
 	return IsInVector(to_check, kTypes_);
 }
 
+bool Grammar::IsOpenBrace(const std::string& to_check)
+{
+	return to_check == kOpenBrace_;
+}
+
+bool Grammar::IsCloseBrace(const std::string& to_check)
+{
+	return to_check == kCloseBrace_;
+}
+
+bool Grammar::IsOpenParenthesis(const std::string& to_check)
+{
+	return to_check == kOpenParenthesis_;
+}
+
+bool Grammar::IsCloseParenthesis(const std::string& to_check)
+{
+	return to_check == kCloseParenthesis_;
+}
+
 LexemType Grammar::GetType(const std::string& to_check)
 {
 	if (IsType(to_check)) { return LexemType::kType; }
 	if (IsAssignment(to_check)) { return LexemType::kAssignment; }
 	if (IsMathOp(to_check)) { return LexemType::kMathOp; }
 	if (IsBoolOp(to_check)) { return LexemType::kBoolOp; }
-	if (IsBracket(to_check)) { return LexemType::kBracket; }
+	if (IsOpenBrace(to_check)) { return LexemType::kOpenBrace; }
+	if (IsCloseBrace(to_check)) { return LexemType::kCloseBrace; }
+	if (IsOpenParenthesis(to_check)) { return LexemType::kOpenParenthesis; }
+	if (IsCloseParenthesis(to_check)) { return LexemType::kCloseParenthesis; }
 	if (IsPunctuator(to_check)) { return LexemType::kPunctuator; }
 	if (utils::IsNumber(to_check)) { return LexemType::kLiteral; }
 	return IsReservedWord(to_check) ? LexemType::kReservedWord : LexemType::kVar;

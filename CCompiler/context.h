@@ -1,23 +1,26 @@
 #pragma once
 #include <string>
+#include "lexem.h"
+#include <vector>
+#include "statement.h"
 
 class Context
 {
 public:
-	explicit Context(int level) : begin_(""), end_(""), content_(""), level_(level) {}
-	void append(const std::string& lexem) { content_ += lexem + " "; };
-	auto content() const { return content_; }
+	explicit Context(int level) : begin_(nullptr), end_(nullptr), level_(level) {}
+	void append(std::shared_ptr<Statement> st) { roots_.push_back(st); };
+	auto roots() const { return roots_; }
 	auto level() const { return level_; }
 
 	auto begin() { return begin_; }
 	auto end() { return end_; }
 
-	void set_begin(const std::string& ch) { begin_ = ch; }
-	void set_end(const std::string& ch) { end_ = ch; }
+	void set_begin(std::shared_ptr<Lexem> ch) { begin_ = ch; }
+	void set_end(std::shared_ptr<Lexem> ch) { end_ = ch; }
 
 private:
-	std::string begin_;
-	std::string end_;
-	std::string content_; //this field is useful to debug the workflow of parsing
+	std::shared_ptr<Lexem> begin_;
+	std::shared_ptr<Lexem> end_;
+	std::vector<std::shared_ptr<Statement>> roots_; //this field is useful to debug the workflow of parsing
 	int level_;
 };

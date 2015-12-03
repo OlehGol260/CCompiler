@@ -11,5 +11,5 @@ public:
 
 	void print() const;
 private:
-	std::vector<std::shared_ptr<Lexem>> lexems_;
+	std::vector<std::shared_ptr<LexemInterface>> lexems_;
 };

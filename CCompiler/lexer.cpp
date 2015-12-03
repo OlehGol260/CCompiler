@@ -4,14 +4,26 @@
 
 #include "grammar.h"
 #include <iostream>
+#include "lexem.h"
+#include "lexem_reserved.h"
 
 void Lexer::GenerateLexems(const std::string& code)
 {
 	std::stringstream ss(AddSpaces(code));
 	std::string token = "";
-	
+	auto i = 0;
 	while(ss >> token) {
-		lexems_.push_back(std::make_shared<Lexem>(Grammar::GetType(token), token));
+		auto type = Grammar::GetType(token);
+		std::shared_ptr<LexemInterface> lexem = nullptr;
+		if (type == LexemType::kReservedWord)
+		{
+			lexem = std::make_shared<LexemReserved>(type, token, i++);
+		}
+		else
+		{
+			lexem = std::make_shared<Lexem>(type, token, i++);
+		}
+		lexems_.push_back(lexem);
 	}
 }
 
@@ -22,7 +34,6 @@ std::string Lexer::AddSpaces(const std::string& code)
 	for (size_t i = 0; i < code_size; i++)
 	{
 		auto str = std::string(1, code.at(i));
-	//	if (isspace(str.at(0))) { continue; }
 
 		if (Grammar::IsOperator(str))
 		{

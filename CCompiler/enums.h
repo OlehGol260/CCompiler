@@ -4,16 +4,18 @@
 #include <string>
 enum class LexemType
 {
-	kType,
-	kVar,
 	kReservedWord,
 	kMathOp,
 	kBoolOp,
-	kExpression,
-	kLiteral,
-	kBracket,
 	kPunctuator,
 	kAssignment,
+	kType,
+	kVar,
+	kLiteral,
+	kOpenBrace,
+	kCloseBrace,
+	kOpenParenthesis,
+	kCloseParenthesis,
 	kUnknown
 };
 
@@ -25,7 +27,10 @@ static const std::map<LexemType, std::string> LexemTypeNames{
 	{ LexemType::kBoolOp, "Boolean_operator" },
 	//{ LexemType::k, "Type specifier" },
 	{ LexemType::kLiteral, "Literal" },
-	{ LexemType::kBracket, "Bracket" },
+	{ LexemType::kOpenBrace, "Open Brace" },
+	{ LexemType::kCloseBrace, "Close Brace" },
+	{ LexemType::kOpenParenthesis, "Open parenthesis" },
+	{ LexemType::kCloseParenthesis, "Close parenthesis" },
 	{ LexemType::kPunctuator, "Semicolon" },
 	{ LexemType::kAssignment, "Assignment_operator" },
 	{ LexemType::kUnknown, "Unknown type" },

@@ -34,6 +34,12 @@
     <Filter Include="Source Files\core\grammar">
       <UniqueIdentifier>{052a9108-9b98-42b3-b0a8-8f9c4c42da2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\compiler">
+      <UniqueIdentifier>{baf38e75-c3bf-4f5c-bb19-b9ffbcfb6579}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\statement">
+      <UniqueIdentifier>{2c352018-e57e-471b-aed4-f526412dfe3a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -44,6 +50,18 @@
     </ClCompile>
     <ClCompile Include="grammar.cpp">
       <Filter>Source Files\core\grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="parser.cpp">
+      <Filter>Source Files\core\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="context_parser.cpp">
+      <Filter>Source Files\core\context</Filter>
+    </ClCompile>
+    <ClCompile Include="compiler.cpp">
+      <Filter>Source Files\core\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="statement.cpp">
+      <Filter>Source Files\core\statement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +94,24 @@
     </ClInclude>
     <ClInclude Include="bracket.h">
       <Filter>Source Files\core\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="parser.h">
+      <Filter>Source Files\core\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="context_parser.h">
+      <Filter>Source Files\core\context</Filter>
+    </ClInclude>
+    <ClInclude Include="lexem_interface.h">
+      <Filter>Source Files\core\lexem</Filter>
+    </ClInclude>
+    <ClInclude Include="lexem_reserved.h">
+      <Filter>Source Files\core\lexem</Filter>
+    </ClInclude>
+    <ClInclude Include="compiler.h">
+      <Filter>Source Files\core\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="statement.h">
+      <Filter>Source Files\core\statement</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

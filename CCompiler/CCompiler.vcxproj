@@ -118,18 +118,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="compiler.cpp" />
+    <ClCompile Include="context_parser.cpp" />
     <ClCompile Include="grammar.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="parser.cpp" />
+    <ClCompile Include="statement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bracket.h" />
+    <ClInclude Include="compiler.h" />
     <ClInclude Include="context.h" />
+    <ClInclude Include="context_parser.h" />
     <ClInclude Include="enums.h" />
     <ClInclude Include="grammar.h" />
     <ClInclude Include="lexem.h" />
+    <ClInclude Include="lexem_interface.h" />
+    <ClInclude Include="lexem_reserved.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="output.h" />
+    <ClInclude Include="parser.h" />
+    <ClInclude Include="statement.h" />
     <ClInclude Include="typedefs.h" />
     <ClInclude Include="type_name_traits.h" />
     <ClInclude Include="utils.h" />
