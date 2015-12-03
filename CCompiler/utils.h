@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sstream>
+#include "enums.h"
 
 namespace utils
 {

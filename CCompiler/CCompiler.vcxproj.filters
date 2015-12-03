@@ -113,5 +113,8 @@
     <ClInclude Include="statement.h">
       <Filter>Source Files\core\statement</Filter>
     </ClInclude>
+    <ClInclude Include="err_msg.h">
+      <Filter>Source Files\core\grammar</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

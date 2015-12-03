@@ -12,9 +12,12 @@ public:
 	//all available lexems passed here
 	void Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems);
 
+	
+private:
 	void ParseStatement(const std::vector< std::shared_ptr<LexemInterface>>& lexems);
 	void ParseComplex(const std::vector< std::shared_ptr<LexemInterface>>& lexems);
-private:
+
+	static bool IsVariableValid(const std::string& var_name);
 private:
 
 	std::shared_ptr<Context> main_context_;
