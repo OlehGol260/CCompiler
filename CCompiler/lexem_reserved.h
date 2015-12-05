@@ -16,7 +16,6 @@ public:
 	void set_condition(std::shared_ptr<Context> cond) { condition_ = cond; }
 	void set_right(std::shared_ptr<Context> body) { body_ = body; }
 private:
-	//for non-terminal this both value will be nullptr
 	std::shared_ptr<Context> condition_;
 	std::shared_ptr<Context> body_;
 };

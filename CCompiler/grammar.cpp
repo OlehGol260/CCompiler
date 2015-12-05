@@ -29,12 +29,12 @@ const std::vector<std::string> Grammar::kMathOperators_ = {
 };
 
 const std::vector<std::string> Grammar::kBoolOperators_ = {
+	"&&",
+	"||",
 	"==",
 	"!=",
 	">",
 	"<",
-	"&&",
-	"||",
 	"!",
 };
 

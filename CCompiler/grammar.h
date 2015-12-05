@@ -45,7 +45,7 @@ public:
 	{
 		return kReservedWords_;
 	}
-	static auto math_operators()
+	static auto& math_operators()
 	{
 		return kMathOperators_;
 	}

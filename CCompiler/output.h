@@ -14,7 +14,4 @@ namespace output
 		ss << "Variable " << VNAME(t) << "of type" << TypeName<T>::Get();
 		return ss.str();
 	}
-
-	/*template<typename T>
-	inline std::string assignment()*/
 }

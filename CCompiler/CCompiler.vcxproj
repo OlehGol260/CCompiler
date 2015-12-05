@@ -125,6 +125,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="statement.cpp" />
+    <ClCompile Include="statement_parser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bracket.h" />
@@ -141,6 +142,7 @@
     <ClInclude Include="output.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="statement.h" />
+    <ClInclude Include="statement_parser.h" />
     <ClInclude Include="typedefs.h" />
     <ClInclude Include="type_name_traits.h" />
     <ClInclude Include="utils.h" />

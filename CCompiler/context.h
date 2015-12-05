@@ -8,7 +8,7 @@ class Context
 {
 public:
 	explicit Context(int level) : begin_(nullptr), end_(nullptr), level_(level) {}
-	void append(std::shared_ptr<Statement> st) { roots_.push_back(st); };
+	void AddStatement(std::shared_ptr<Statement> st) { roots_.push_back(st); };
 	auto roots() const { return roots_; }
 	auto level() const { return level_; }
 
@@ -21,6 +21,6 @@ public:
 private:
 	std::shared_ptr<Lexem> begin_;
 	std::shared_ptr<Lexem> end_;
-	std::vector<std::shared_ptr<Statement>> roots_; //this field is useful to debug the workflow of parsing
+	std::vector<std::shared_ptr<Statement>> roots_;
 	int level_;
 };

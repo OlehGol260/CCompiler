@@ -15,13 +15,21 @@ enum class LexemType
 	kCloseBrace,
 	kOpenParenthesis,
 	kCloseParenthesis,
-	kUnknown
+	kUnknown,
+	kVarDeclaration 
 };
 
 enum class BracketType
 {
 	kParentheses,
 	kBrackets,
+};
+
+enum class WhereAttachCh
+{
+	kLeft,
+	kRight,
+	kUnknown
 };
 
 static const std::map<LexemType, std::string> LexemTypeNames{

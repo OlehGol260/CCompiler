@@ -15,10 +15,9 @@ public:
 	auto left() const { return left_lexem_; }
 	auto right() const { return right_lexem_; }
 
-	void set_left(std::shared_ptr<Lexem> left) { left_lexem_ = left; }
-	void set_right(std::shared_ptr<Lexem> right) { right_lexem_ = right; }
+	void set_left(std::shared_ptr<LexemInterface> left) { left_lexem_ = left; }
+	void set_right(std::shared_ptr<LexemInterface> right) { right_lexem_ = right; }
 private:
-	//for non-terminal this both value will be nullptr
-	std::shared_ptr<Lexem> left_lexem_;
-	std::shared_ptr<Lexem> right_lexem_;
+	std::shared_ptr<LexemInterface> left_lexem_;
+	std::shared_ptr<LexemInterface> right_lexem_;
 };

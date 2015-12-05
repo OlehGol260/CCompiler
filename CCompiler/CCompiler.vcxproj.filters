@@ -63,6 +63,9 @@
     <ClCompile Include="statement.cpp">
       <Filter>Source Files\core\statement</Filter>
     </ClCompile>
+    <ClCompile Include="statement_parser.cpp">
+      <Filter>Source Files\core\parser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lexem.h">
@@ -80,13 +83,7 @@
     <ClInclude Include="type_name_traits.h">
       <Filter>Source Files\output</Filter>
     </ClInclude>
-    <ClInclude Include="grammar.h">
-      <Filter>Source Files\core\grammar</Filter>
-    </ClInclude>
     <ClInclude Include="enums.h">
-      <Filter>Source Files\core\grammar</Filter>
-    </ClInclude>
-    <ClInclude Include="typedefs.h">
       <Filter>Source Files\core\grammar</Filter>
     </ClInclude>
     <ClInclude Include="utils.h">
@@ -114,6 +111,15 @@
       <Filter>Source Files\core\statement</Filter>
     </ClInclude>
     <ClInclude Include="err_msg.h">
+      <Filter>Source Files\core\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="grammar.h">
+      <Filter>Source Files\core\lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="statement_parser.h">
+      <Filter>Source Files\core\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="typedefs.h">
       <Filter>Source Files\core\grammar</Filter>
     </ClInclude>
   </ItemGroup>
