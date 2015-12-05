@@ -1,7 +1,5 @@
 ﻿#include "statement_parser.h"
 
-#include <iostream>
-
 #include "grammar.h"
 
 
@@ -10,18 +8,21 @@ std::shared_ptr<Statement> StatementParser::Parse(const std::vector<std::shared_
 	if (lexems.empty()) { return nullptr; }
 
 	auto statement = std::make_shared<Statement>();
-	auto is_var_decl = 0; //do not include type to the analyzies, if appeares
+	auto is_var_decl = 0;	// do not include variable type, if appeares
 	auto is_punctuater = 0; // do not include punctuator, if appeares
-	if (lexems.at(0)->type() == LT::kType)
+	if (Grammar::IsVarType(lexems.front()->type()))
 	{
-		//is_var_decl = 1; TODO: THIS IS CORRECT, for debug remove init
-		is_var_decl = 3;
+		// this value will be subtracted from lexems.rend. rend - points to the next element after the last(more in the specification)
+		// so if we don't want to include the last element, we need to subtact 2: rend - 1 -> point to the last el,
+		// rend - 2 -> point to the element before the last in the vector
+		is_var_decl = 2; 
+
 		auto var_init = std::make_shared<Lexem>(LT::kVarDeclaration, "DEF");
 		var_init->set_left(std::static_pointer_cast<Lexem>(lexems.at(0)));
 		var_init->set_right(std::static_pointer_cast<Lexem>(lexems.at(1)));
 		statement->set_var_init(var_init);
 	}
-	if (lexems.size() > 2)
+	if (Grammar::IsPunctuator(lexems.back()->type()))
 	{
 		is_punctuater = 1;
 		statement->set_punctuator(lexems.back());
@@ -42,12 +43,12 @@ std::shared_ptr<LexemInterface> StatementParser::InnerStatParse(std::shared_ptr<
 	auto current_token = *rbegin; //if only literal passed, following loops won't be executed and current token will hold the literal as needed
 	auto found_needed_op = false;
 
-	for (auto it_math = Grammar::math_bool_operators().cbegin(); !found_needed_op && it_math != Grammar::math_bool_operators().cend(); ++it_math)
+	for (auto it_bin = Grammar::binary_operators().cbegin(); !found_needed_op && it_bin != Grammar::binary_operators().cend(); ++it_bin)
 	{
 		for (auto it_tok = rbegin; !found_needed_op && it_tok != rend; ++it_tok)
 		{
 			current_token = *it_tok;
-			if (curr_level == current_token->level() && current_token->type() == LT::kMathBoolOperator && current_token->value() == *it_math)
+			if (curr_level == current_token->level() && Grammar::IsBinaryOperator(current_token->type()) && current_token->value() == *it_bin)
 			{
 				InnerStatParse(current_token, WhereAttachCh::kLeft, it_tok + 1, rend);
 				InnerStatParse(current_token, WhereAttachCh::kRight, rbegin, it_tok - 1);

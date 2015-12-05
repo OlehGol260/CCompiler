@@ -24,6 +24,7 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 	lexems_block.clear();
 	auto lexems_size = lexems.size();
 
+	auto is_next_token_invalid = false;
 
 	for (size_t i = 0; i < lexems_size; i++)
 	{
@@ -42,7 +43,9 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 		//there is no kReservedWord, becase kUnknow case determine how to begin to parse
 		switch (state)
 		{
-		case LT::kMathBoolOperator:
+		case LT::kReservedWord:
+			if (Grammar::IsOpenParenthesis(next_token_type))
+		case LT::kBinaryOperator:
 			switch (next_token_type)
 			{
 			case LT::kVar:
@@ -51,21 +54,12 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 				state = next_token_type;
 				break;
 			default:
-				ErrMessage::AbortInvalidNextToken(current_lexem->value(), next_token->value());
+				is_next_token_invalid = true;
 			}
 			break;
 			///////////////////////////////////////////
 		case LT::kPunctuator:
-			switch (next_token_type)
-			{
-			case LT::kCloseParenthesis:
-			case LT::kCloseBrace:
-				state = next_token_type;
-				break;
-			default:
-				state = LT::kUnknown;
-			}
-
+			state = (open_parenthesis_count || open_brace_count) ? next_token_type : LT::kUnknown;
 			break;
 			///////////////////////////////////////////
 		case LT::kAssignment:
@@ -77,18 +71,18 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 				state = next_token_type;
 				break;
 			default:
-				ErrMessage::AbortInvalidNextToken(current_lexem->value(), next_token->value());
+				is_next_token_invalid = true;
 			}
 			break;
 			///////////////////////////////////////////
-		case LT::kType:
-			if (next_token_type == LT::kVar)
+		case LT::kVarType:
+			if (Grammar::IsVariable(next_token_type))
 			{
 				state = next_token_type;
 			}
 			else
 			{
-				ErrMessage::AbortInvalidNextToken(current_lexem->value(), next_token->value());
+				is_next_token_invalid = true;
 			}
 			break;
 			///////////////////////////////////////////
@@ -101,11 +95,11 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			{
 			case LT::kPunctuator:
 			case LT::kAssignment:
-			case LT::kMathBoolOperator:
+			case LT::kBinaryOperator:
 				state = next_token_type;
 				break;
 			default:
-				ErrMessage::AbortInvalidNextToken(current_lexem->value(), next_token->value());
+				is_next_token_invalid = true;
 				break;
 			}
 			break;
@@ -115,11 +109,11 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			{
 			case LT::kCloseParenthesis:
 			case LT::kPunctuator:
-			case LT::kMathBoolOperator:
+			case LT::kBinaryOperator:
 				state = next_token_type;
 				break;
 			default:
-				ErrMessage::AbortInvalidNextToken(current_lexem->value(), next_token->value());
+				is_next_token_invalid = true;
 			}
 			break;
 			///////////////////////////////////////////
@@ -127,13 +121,13 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			open_brace_count++;
 			switch (next_token_type)
 			{
-			case LT::kType:
+			case LT::kVarType:
 			case LT::kVar:
 			case LT::kOpenBrace:
 			case LT::kReservedWord:
 				state = next_token_type;
 			default:
-				ErrMessage::AbortInvalidNextToken(current_lexem->value(), next_token->value());
+				is_next_token_invalid = true;
 			}	
 			break;
 			///////////////////////////////////////////
@@ -149,15 +143,11 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			}
 			else
 			{
-				ErrMessage::AbortMsg("Number of open and closed braces doesn't match");
+				ErrMessage::AbortInvalidNumberBrackets(BracketType::kBraces);
 			}
 			break;
 			///////////////////////////////////////////
 		case LT::kOpenParenthesis:
-			if (current_lexem_type != LT::kOpenParenthesis)
-			{
-				ErrMessage::AbortMsg("Meet: " + current_lexem->value() + " Required: '('");
-			}
 			open_parenthesis_count++;
 			switch (next_token_type)
 			{
@@ -167,16 +157,12 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 				state = next_token_type;
 				break;
 			default:
-				ErrMessage::AbortInvalidNextToken(current_lexem->value(), next_token->value());
+				is_next_token_invalid = true;
 			}
 			break;
 			///////////////////////////////////////////
 		case LT::kCloseParenthesis:
 		{
-			if (current_lexem_type != LT::kCloseParenthesis)
-			{
-				ErrMessage::AbortMsg("Meet: " + current_lexem->value() + " Required: ')'");
-			}
 			open_parenthesis_count--;
 			auto signalize_inv_br_numb = false;
 
@@ -188,12 +174,13 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			case LT::kPunctuator:
 				if (open_parenthesis_count != 0) { signalize_inv_br_numb = true; }
 				break;
-			case LT::kMathBoolOperator:
+			case LT::kBinaryOperator:
 				if (open_parenthesis_count < 0) { signalize_inv_br_numb = true; }
 				break;
 			default:
-				ErrMessage::AbortInvalidNextToken(current_lexem->value(), next_token->value());
+				is_next_token_invalid = true;
 			}
+
 			if (signalize_inv_br_numb)
 			{
 				ErrMessage::AbortInvalidNumberBrackets(BracketType::kParentheses);
@@ -208,7 +195,7 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			case LT::kReservedWord:
 				state = LT::kOpenParenthesis;
 				break;
-			case LT::kType:
+			case LT::kVarType:
 				state = LT::kVar;
 				break;
 			case LT::kVar:
@@ -219,16 +206,21 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			}
 			break;
 		}
+
+		if (is_next_token_invalid)
+		{
+			ErrMessage::AbortInvalidNextToken(current_lexem->value(), next_token->value());
+		}
 		current_lexem->set_level(open_parenthesis_count);
 		//TODO: WILD WORKAROUND
-		if (current_lexem_type != LT::kOpenParenthesis && current_lexem_type != LT::kCloseParenthesis)
+		if (!Grammar::IsBracket(current_lexem_type))
 		{
 			lexems_block.push_back(current_lexem);
 		}
 		
 		if (state == LT::kUnknown && !lexems_block.empty())
 		{
-			if (lexems_block.at(0)->type() == LT::kReservedWord)
+			if (Grammar::IsReservedWord(lexems_block.front()->type()))
 			{
 				ParseComplex(lexems_block);
 			}
@@ -240,8 +232,6 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 				}
 				auto st = StatementParser::Parse(lexems_block);
 				st->Print();
-				auto a = 0;
-				//ParseStatement(lexems_block);
 			}
 			lexems_block.clear();
 		}

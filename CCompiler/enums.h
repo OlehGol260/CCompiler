@@ -4,12 +4,10 @@
 enum class LexemType
 {
 	kReservedWord,
-	kMathBoolOperator,
-	kMathOp,
-	kBoolOp,
+	kBinaryOperator,
 	kPunctuator,
 	kAssignment,
-	kType,
+	kVarType,
 	kVar,
 	kLiteral,
 	kOpenBrace,
@@ -17,6 +15,7 @@ enum class LexemType
 	kOpenParenthesis,
 	kCloseParenthesis,
 	kUnknown,
+	kLogicalNot,
 	kVarDeclaration 
 };
 
@@ -34,12 +33,11 @@ enum class WhereAttachCh
 };
 
 static const std::map<LexemType, std::string> LexemTypeNames{
-	{ LexemType::kType, "Type_specifier"},
+	{ LexemType::kLogicalNot, "Logical not"},
+	{ LexemType::kVarType, "Type_specifier"},
 	{ LexemType::kVar, "Variable" },
 	{ LexemType::kReservedWord, "Reserved_word" },
-	{ LexemType::kMathBoolOperator, "Math or bool operator"},
-	{ LexemType::kMathOp, "Mathematic_operator" },
-	{ LexemType::kBoolOp, "Boolean_operator" },
+	{ LexemType::kBinaryOperator, "Binary operator"},
 	{ LexemType::kLiteral, "Literal" },
 	{ LexemType::kOpenBrace, "Open Brace" },
 	{ LexemType::kCloseBrace, "Close Brace" },
