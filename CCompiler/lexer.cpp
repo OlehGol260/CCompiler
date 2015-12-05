@@ -35,6 +35,17 @@ std::string Lexer::AddSpaces(const std::string& code)
 	{
 		auto str = std::string(1, code.at(i));
 
+		//check for operators which contatin 2 symbols : != and ==
+		if (Grammar::IsAssignment(str) || Grammar::IsLogicalNot(str))
+		{
+			auto next_str = std::string(1, code.at(i + 1));
+			if (Grammar::IsAssignment(next_str))
+			{
+				str += next_str;
+				i++;
+			}	
+		}
+		
 		if (Grammar::IsOperator(str))
 		{
 			ss << " " << str << " ";

@@ -4,6 +4,7 @@
 enum class LexemType
 {
 	kReservedWord,
+	kMathBoolOperator,
 	kMathOp,
 	kBoolOp,
 	kPunctuator,
@@ -36,6 +37,7 @@ static const std::map<LexemType, std::string> LexemTypeNames{
 	{ LexemType::kType, "Type_specifier"},
 	{ LexemType::kVar, "Variable" },
 	{ LexemType::kReservedWord, "Reserved_word" },
+	{ LexemType::kMathBoolOperator, "Math or bool operator"},
 	{ LexemType::kMathOp, "Mathematic_operator" },
 	{ LexemType::kBoolOp, "Boolean_operator" },
 	{ LexemType::kLiteral, "Literal" },

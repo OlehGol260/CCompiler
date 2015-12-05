@@ -27,54 +27,44 @@ std::shared_ptr<Statement> StatementParser::Parse(const std::vector<std::shared_
 		statement->set_punctuator(lexems.back());
 	}
 
-	statement->set_root(InnerMathStatParse(nullptr, WhereAttachCh::kUnknown, lexems.rbegin() + is_punctuater, lexems.rend() - is_var_decl));
+	statement->set_root(InnerStatParse(nullptr, WhereAttachCh::kUnknown, lexems.rbegin() + is_punctuater, lexems.rend() - is_var_decl));
 
 	return statement;
 }
 
-std::shared_ptr<LexemInterface> StatementParser::InnerMathStatParse(std::shared_ptr<LexemInterface> parent, const WhereAttachCh&& side, lexem_interfaces_reverse_iter rbegin, lexem_interfaces_reverse_iter rend)
+std::shared_ptr<LexemInterface> StatementParser::InnerStatParse(std::shared_ptr<LexemInterface> parent, const WhereAttachCh&& side, lexem_interfaces_reverse_iter rbegin, lexem_interfaces_reverse_iter rend)
 {
-	//TODO: ASSIGNMENT
-
-	auto a = std::min_element(rbegin, rend, [](std::shared_ptr<LexemInterface> l1, std::shared_ptr<LexemInterface> l2)
+	auto lowest_lvl = std::min_element(rbegin, rend, [](std::shared_ptr<LexemInterface> l1, std::shared_ptr<LexemInterface> l2)
 	{
 		return l1->level() < l2->level();
 	});
-	auto curr_level = (*a)->level();
-	auto current_token = *rbegin; // if found needed operator, this will hold this operator
+	auto curr_level = (*lowest_lvl)->level();
+	auto current_token = *rbegin; //if only literal passed, following loops won't be executed and current token will hold the literal as needed
 	auto found_needed_op = false;
 
-	for (auto it_math = Grammar::math_operators().cbegin(); !found_needed_op && it_math != Grammar::math_operators().cend(); ++it_math)
+	for (auto it_math = Grammar::math_bool_operators().cbegin(); !found_needed_op && it_math != Grammar::math_bool_operators().cend(); ++it_math)
 	{
 		for (auto it_tok = rbegin; !found_needed_op && it_tok != rend; ++it_tok)
 		{
 			current_token = *it_tok;
-			auto current_token_value = current_token->value();
-			if (curr_level == current_token->level() && current_token->type() == LT::kMathOp && current_token->value() == *it_math)
+			if (curr_level == current_token->level() && current_token->type() == LT::kMathBoolOperator && current_token->value() == *it_math)
 			{
-				
-				std::cout << current_token->value() << std::endl;
-				
-				InnerMathStatParse(current_token, WhereAttachCh::kLeft, it_tok + 1, rend);
-				InnerMathStatParse(current_token, WhereAttachCh::kRight, rbegin, it_tok - 1);
-
+				InnerStatParse(current_token, WhereAttachCh::kLeft, it_tok + 1, rend);
+				InnerStatParse(current_token, WhereAttachCh::kRight, rbegin, it_tok - 1);
 				found_needed_op = true;
 			}
 		}
 	}
-	if (parent)
+	if (!parent) { return current_token; }
+
+	auto parent_ = std::static_pointer_cast<Lexem>(parent);
+	if (side == WhereAttachCh::kLeft)
 	{
-		auto parent_ = std::static_pointer_cast<Lexem>(parent);
-		if (side == WhereAttachCh::kLeft)
-		{
-			parent_->set_left(current_token);
-		}
-		else
-		{
-			parent_->set_right(current_token);
-		}
-		parent = parent_;
-		return parent;
-	} 
-	return current_token;	
+		parent_->set_left(current_token);
+	}
+	else
+	{
+		parent_->set_right(current_token);
+	}
+	return parent;
 }

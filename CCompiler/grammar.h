@@ -22,6 +22,7 @@ public:
 	static bool IsBracket(const std::string& to_check);
 	static bool IsPunctuator(const std::string& to_check);
 	static bool IsType(const std::string& to_check);
+	static bool IsLogicalNot(const std::string& to_check);
 
 	static bool IsOpenBrace(const std::string& to_check);
 	static bool IsCloseBrace(const std::string& to_check);
@@ -49,6 +50,10 @@ public:
 	{
 		return kMathOperators_;
 	}
+	static auto& math_bool_operators()
+	{
+		return kMathBoolOperators_;
+	}
 	static auto bool_operators()
 	{
 		return kBoolOperators_;
@@ -72,10 +77,12 @@ private:
 	static const std::string kCloseParenthesis_;
 	static const std::vector<std::string> kReservedWords_;
 	static const std::vector<std::string> kMathOperators_;
+	static const std::vector<std::string> kMathBoolOperators_;
 	static const std::vector<std::string> kBoolOperators_;
 	static const std::vector<std::string> kTypes_;
 	static const std::string kAssignment_;
 	static const std::string kPunctuator_;
+	static const std::string kLogicalNot_;
 };
 
 

@@ -42,12 +42,7 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 		//there is no kReservedWord, becase kUnknow case determine how to begin to parse
 		switch (state)
 		{
-		case LT::kMathOp:
-		case LT::kBoolOp:
-			if (current_lexem_type != LT::kMathOp && current_lexem_type != LT::kBoolOp)
-			{
-				ErrMessage::AbortMsg("Meet: " + current_lexem->value() + " Required: bool operator");
-			}
+		case LT::kMathBoolOperator:
 			switch (next_token_type)
 			{
 			case LT::kVar:
@@ -61,11 +56,6 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			break;
 			///////////////////////////////////////////
 		case LT::kPunctuator:
-			if (current_lexem_type != LT::kPunctuator)
-			{
-				ErrMessage::AbortMsg("Meet: " + current_lexem->value() + " Required: ';'");
-			}
-
 			switch (next_token_type)
 			{
 			case LT::kCloseParenthesis:
@@ -79,10 +69,6 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			break;
 			///////////////////////////////////////////
 		case LT::kAssignment:
-			if (current_lexem_type != LT::kAssignment)
-			{
-				ErrMessage::AbortMsg("Meet: " + current_lexem->value() + " Required: '='");
-			}
 			switch (next_token_type)
 			{
 			case LT::kVar:
@@ -96,10 +82,6 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			break;
 			///////////////////////////////////////////
 		case LT::kType:
-			if (current_lexem_type != LT::kType)
-			{
-				ErrMessage::AbortMsg("Meet: " + current_lexem->value() + " Required: type specifier");
-			}
 			if (next_token_type == LT::kVar)
 			{
 				state = next_token_type;
@@ -111,10 +93,6 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			break;
 			///////////////////////////////////////////
 		case LT::kVar:
-			if (current_lexem_type != LT::kVar)
-			{
-				ErrMessage::AbortMsg("Invalid token met: " + current_lexem->value() + "Variable expected");
-			}
 			if (!IsVariableValid(current_lexem->value()))
 			{
 				ErrMessage::AbortInvalidVariable(current_lexem->value());
@@ -123,8 +101,7 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			{
 			case LT::kPunctuator:
 			case LT::kAssignment:
-			case LT::kMathOp:
-			case LT::kBoolOp:
+			case LT::kMathBoolOperator:
 				state = next_token_type;
 				break;
 			default:
@@ -134,16 +111,11 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			break;
 			///////////////////////////////////////////		
 		case LT::kLiteral:
-			if (current_lexem_type != LT::kLiteral)
-			{
-				ErrMessage::AbortMsg("Invalid token met: " + current_lexem->value() + "Literal expected");
-			}
 			switch (next_token_type)
 			{
 			case LT::kCloseParenthesis:
 			case LT::kPunctuator:
-			case LT::kMathOp:
-			case LT::kBoolOp:
+			case LT::kMathBoolOperator:
 				state = next_token_type;
 				break;
 			default:
@@ -152,19 +124,20 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			break;
 			///////////////////////////////////////////
 		case LT::kOpenBrace:
-			if (current_lexem_type != LT::kOpenBrace)
-			{
-				ErrMessage::AbortMsg("Meet: " + current_lexem->value() + " Required: '{'");
-			}
 			open_brace_count++;
-			state = next_token_type;
+			switch (next_token_type)
+			{
+			case LT::kType:
+			case LT::kVar:
+			case LT::kOpenBrace:
+			case LT::kReservedWord:
+				state = next_token_type;
+			default:
+				ErrMessage::AbortInvalidNextToken(current_lexem->value(), next_token->value());
+			}	
 			break;
 			///////////////////////////////////////////
 		case LT::kCloseBrace:
-			if (current_lexem_type != LT::kCloseBrace)
-			{
-				ErrMessage::AbortMsg("Meet: " + current_lexem->value() + " Required: '}'");
-			}
 			open_brace_count--;
 			if (open_brace_count == 0)
 			{
@@ -215,8 +188,7 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			case LT::kPunctuator:
 				if (open_parenthesis_count != 0) { signalize_inv_br_numb = true; }
 				break;
-			case LT::kMathOp:
-			case LT::kBoolOp:
+			case LT::kMathBoolOperator:
 				if (open_parenthesis_count < 0) { signalize_inv_br_numb = true; }
 				break;
 			default:

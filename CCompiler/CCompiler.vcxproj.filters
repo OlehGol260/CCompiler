@@ -113,13 +113,13 @@
     <ClInclude Include="err_msg.h">
       <Filter>Source Files\core\grammar</Filter>
     </ClInclude>
-    <ClInclude Include="grammar.h">
-      <Filter>Source Files\core\lexer</Filter>
-    </ClInclude>
     <ClInclude Include="statement_parser.h">
       <Filter>Source Files\core\parser</Filter>
     </ClInclude>
     <ClInclude Include="typedefs.h">
+      <Filter>Source Files\core\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="grammar.h">
       <Filter>Source Files\core\grammar</Filter>
     </ClInclude>
   </ItemGroup>
