@@ -214,40 +214,24 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 		{
 			ErrMessage::AbortInvalidNextToken(current_lexem->value(), next_token->value());
 		}
+
 		current_lexem->set_level(open_parenthesis_count);
-		////TODO: WILD WORKAROUND
-		//if (!Grammar::IsBracket(current_lexem_type))
-		//{
-		//	
-		//}
 		lexems_block.push_back(current_lexem);
+
 		if (state == LT::kUnknown && !lexems_block.empty())
 		{
 			if (Grammar::IsReservedWord(lexems_block.front()->type()))
 			{
 				auto st = ControlFlowParser::Parse(lexems_block);
-				st->Print();
 			}
 			else
 			{
-				for (auto &a : lexems_block)
-				{
-					std::cout << a->value() << "\t" << a->level() << std::endl;
-				}
 				auto st = StatementParser::Parse(lexems_block);
 				st->Print();
 			}
 			lexems_block.clear();
 		}
 
-	}
-}
-
-void Parser::ParseComplex(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
-{
-	for (auto& lexem : lexems)
-	{
-		std::cout << lexem->value() << "\t\t" << LexemTypeNames.at(lexem->type()) << std::endl;
 	}
 }
 
