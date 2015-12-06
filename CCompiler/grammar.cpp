@@ -128,6 +128,11 @@ bool Grammar::IsVariable(const LexemType& t)
 	return t == LexemType::kVar;
 }
 
+bool Grammar::IsLiteral(const LexemType& t)
+{
+	return t == LexemType::kLiteral;
+}
+
 bool Grammar::IsOpenBrace(const std::string& to_check)
 {
 	return to_check == kOpenBrace_;

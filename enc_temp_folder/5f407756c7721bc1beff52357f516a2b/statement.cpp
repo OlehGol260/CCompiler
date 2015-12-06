@@ -6,7 +6,10 @@
 
 void Statement::Print() const
 {
+	//TODO: assignment and type
+
 	InnerPrint(root_);
+
 }
 
 void Statement::InnerPrint(std::shared_ptr<LexemInterface> lexem) const

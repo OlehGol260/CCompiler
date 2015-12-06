@@ -57,6 +57,7 @@ public:
 	static bool IsOpenParenthesis(const LexemType& t);
 	static bool IsCloseParenthesis(const LexemType& t);
 	static bool IsVariable(const LexemType& t);
+	static bool IsLiteral(const LexemType& t);
 	static LexemType GetType(const std::string& to_check);
 
 	static auto& open_parenthesis() { return kOpenParenthesis_; }

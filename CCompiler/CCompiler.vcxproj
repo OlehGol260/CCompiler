@@ -120,6 +120,7 @@
   <ItemGroup>
     <ClCompile Include="compiler.cpp" />
     <ClCompile Include="context_parser.cpp" />
+    <ClCompile Include="control_flow_parser.cpp" />
     <ClCompile Include="grammar.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="main.cpp" />
@@ -132,6 +133,7 @@
     <ClInclude Include="compiler.h" />
     <ClInclude Include="context.h" />
     <ClInclude Include="context_parser.h" />
+    <ClInclude Include="control_flow_parser.h" />
     <ClInclude Include="enums.h" />
     <ClInclude Include="err_msg.h" />
     <ClInclude Include="grammar.h" />

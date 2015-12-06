@@ -40,6 +40,12 @@
     <Filter Include="Source Files\core\statement">
       <UniqueIdentifier>{2c352018-e57e-471b-aed4-f526412dfe3a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\parser\statement_parser">
+      <UniqueIdentifier>{fea3b166-bd46-40d9-a92f-f0fe01b55a61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\parser\control_flow_parser">
+      <UniqueIdentifier>{92ae3f8e-b236-46d1-adcc-eeb236bcdb97}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -64,7 +70,10 @@
       <Filter>Source Files\core\statement</Filter>
     </ClCompile>
     <ClCompile Include="statement_parser.cpp">
-      <Filter>Source Files\core\parser</Filter>
+      <Filter>Source Files\core\parser\statement_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="control_flow_parser.cpp">
+      <Filter>Source Files\core\parser\control_flow_parser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -113,14 +122,17 @@
     <ClInclude Include="err_msg.h">
       <Filter>Source Files\core\grammar</Filter>
     </ClInclude>
-    <ClInclude Include="statement_parser.h">
-      <Filter>Source Files\core\parser</Filter>
-    </ClInclude>
     <ClInclude Include="typedefs.h">
       <Filter>Source Files\core\grammar</Filter>
     </ClInclude>
     <ClInclude Include="grammar.h">
       <Filter>Source Files\core\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="statement_parser.h">
+      <Filter>Source Files\core\parser\statement_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="control_flow_parser.h">
+      <Filter>Source Files\core\parser\control_flow_parser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

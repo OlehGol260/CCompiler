@@ -22,7 +22,7 @@ enum class LexemType
 enum class BracketType
 {
 	kParentheses,
-	kBrackets,
+	kBraces,
 };
 
 enum class WhereAttachCh

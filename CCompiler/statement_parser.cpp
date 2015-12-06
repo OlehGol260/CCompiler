@@ -12,10 +12,10 @@ std::shared_ptr<Statement> StatementParser::Parse(const std::vector<std::shared_
 	auto is_punctuater = 0; // do not include punctuator, if appeares
 	if (Grammar::IsVarType(lexems.front()->type()))
 	{
-		// this value will be subtracted from lexems.rend. rend - points to the next element after the last(more in the specification)
-		// so if we don't want to include the last element, we need to subtact 2: rend - 1 -> point to the last el,
-		// rend - 2 -> point to the element before the last in the vector
-		is_var_decl = 2; 
+		//	this value will be subtracted from lexems.rend.
+		//	rend - points to the next element after the last(more in the specification)
+		//	so if we don't want to include the last element, we subtract 1, so it != end will trigger at the last element
+		is_var_decl = 1; 
 
 		auto var_init = std::make_shared<Lexem>(LT::kVarDeclaration, "DEF");
 		var_init->set_left(std::static_pointer_cast<Lexem>(lexems.at(0)));
@@ -35,37 +35,53 @@ std::shared_ptr<Statement> StatementParser::Parse(const std::vector<std::shared_
 
 std::shared_ptr<LexemInterface> StatementParser::InnerStatParse(std::shared_ptr<LexemInterface> parent, const WhereAttachCh&& side, lexem_interfaces_reverse_iter rbegin, lexem_interfaces_reverse_iter rend)
 {
-	auto lowest_lvl = std::min_element(rbegin, rend, [](std::shared_ptr<LexemInterface> l1, std::shared_ptr<LexemInterface> l2)
-	{
-		return l1->level() < l2->level();
-	});
-	auto curr_level = (*lowest_lvl)->level();
-	auto current_token = *rbegin; //if only literal passed, following loops won't be executed and current token will hold the literal as needed
+	auto curr_level = GetLowestLevel(rbegin, rend);
+
+	std::shared_ptr<LexemInterface> current_token = nullptr; //if only literal passed, following loops won't be executed and current token will hold the literal as needed
+	std::shared_ptr<LexemInterface> result_token = nullptr;
 	auto found_needed_op = false;
 
 	for (auto it_bin = Grammar::binary_operators().cbegin(); !found_needed_op && it_bin != Grammar::binary_operators().cend(); ++it_bin)
 	{
+
 		for (auto it_tok = rbegin; !found_needed_op && it_tok != rend; ++it_tok)
 		{
 			current_token = *it_tok;
-			if (curr_level == current_token->level() && Grammar::IsBinaryOperator(current_token->type()) && current_token->value() == *it_bin)
+			if (Grammar::IsBracket(current_token->type())) { continue; }
+			result_token = current_token;
+			if (curr_level == result_token->level() && Grammar::IsBinaryOperator(result_token->type()) && result_token->value() == *it_bin)
 			{
-				InnerStatParse(current_token, WhereAttachCh::kLeft, it_tok + 1, rend);
-				InnerStatParse(current_token, WhereAttachCh::kRight, rbegin, it_tok - 1);
+				InnerStatParse(result_token, WhereAttachCh::kLeft, it_tok + 1, rend);
+				auto a = it_tok - 1;
+				InnerStatParse(result_token, WhereAttachCh::kRight, rbegin, it_tok);
 				found_needed_op = true;
-			}
+ 			}
 		}
 	}
-	if (!parent) { return current_token; }
+	if (!parent) { return result_token; }
 
 	auto parent_ = std::static_pointer_cast<Lexem>(parent);
 	if (side == WhereAttachCh::kLeft)
 	{
-		parent_->set_left(current_token);
+		parent_->set_left(result_token);
 	}
 	else
 	{
-		parent_->set_right(current_token);
+		parent_->set_right(result_token);
 	}
 	return parent;
+}
+
+int StatementParser::GetLowestLevel(lexem_interfaces_reverse_iter rbegin, lexem_interfaces_reverse_iter rend)
+{
+	auto min_lvl = 10000;
+	for (auto it = rbegin; it != rend ; ++it)
+	{
+		auto curr = (*it);
+		if (!Grammar::IsBracket(curr->type()) && curr->level() < min_lvl)
+		{
+			min_lvl = curr->level();
+		}
+	}
+	return min_lvl;
 }

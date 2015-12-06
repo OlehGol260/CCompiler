@@ -17,11 +17,11 @@ void Lexer::GenerateLexems(const std::string& code)
 		std::shared_ptr<LexemInterface> lexem = nullptr;
 		if (type == LexemType::kReservedWord)
 		{
-			lexem = std::make_shared<LexemReserved>(type, token, i++);
+			lexem = std::make_shared<LexemReserved>(type, token);
 		}
 		else
 		{
-			lexem = std::make_shared<Lexem>(type, token, i++);
+			lexem = std::make_shared<Lexem>(type, token);
 		}
 		lexems_.push_back(lexem);
 	}
