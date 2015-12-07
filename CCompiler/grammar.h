@@ -45,7 +45,8 @@ public:
 	static bool IsCloseBrace(const std::string& to_check);
 	static bool IsOpenParenthesis(const std::string& to_check);
 	static bool IsCloseParenthesis(const std::string& to_check);
-
+	static bool IsDoubleQuote(const LexemType& t);
+	static bool IsDoubleQuote(const std::string& to_check);
 	static bool IsBinaryOperator(const LexemType& t);
 	static bool IsReservedWord(const LexemType& t);
 	static bool IsAssignment(const LexemType& t);
@@ -97,6 +98,7 @@ private:
 	static const std::string kAssignment_;
 	static const std::string kPunctuator_;
 	static const std::string kLogicalNot_;
+	static const std::string kDoubleQoute_;
 };
 
 

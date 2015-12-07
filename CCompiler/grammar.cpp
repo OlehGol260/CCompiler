@@ -35,6 +35,7 @@ const std::vector<std::string> Grammar::kBinaryOperators = {
 	"/",
 	"%",
 };
+const std::string Grammar::kDoubleQoute_ = "\"";
 
 const std::string Grammar::kAssignment_ = "=";
 
@@ -153,6 +154,16 @@ bool Grammar::IsCloseParenthesis(const std::string& to_check)
 	return to_check == kCloseParenthesis_;
 }
 
+bool Grammar::IsDoubleQuote(const LexemType& t)
+{
+	return t == LexemType::kDoubleQoute;
+}
+
+bool Grammar::IsDoubleQuote(const std::string& to_check)
+{
+	return to_check == kDoubleQoute_;
+}
+
 LexemType Grammar::GetType(const std::string& to_check)
 {
 	if (IsVarType(to_check)) { return LexemType::kVarType; }
@@ -164,5 +175,6 @@ LexemType Grammar::GetType(const std::string& to_check)
 	if (IsCloseParenthesis(to_check)) { return LexemType::kCloseParenthesis; }
 	if (IsPunctuator(to_check)) { return LexemType::kPunctuator; }
 	if (utils::IsNumber(to_check)) { return LexemType::kLiteral; }
+	if (IsDoubleQuote(to_check)) { return LexemType::kDoubleQoute; }
 	return IsReservedWord(to_check) ? LexemType::kReservedWord : LexemType::kVar;
 }

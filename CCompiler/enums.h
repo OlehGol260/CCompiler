@@ -16,7 +16,8 @@ enum class LexemType
 	kCloseParenthesis,
 	kUnknown,
 	kLogicalNot,
-	kVarDeclaration 
+	kVarDeclaration,
+	kDoubleQoute,
 };
 
 enum class BracketType
@@ -33,6 +34,7 @@ enum class WhereAttachCh
 };
 
 static const std::map<LexemType, std::string> LexemTypeNames{
+	{ LexemType::kDoubleQoute, "Double quote"},
 	{ LexemType::kLogicalNot, "Logical not"},
 	{ LexemType::kVarType, "Type_specifier"},
 	{ LexemType::kVar, "Variable" },

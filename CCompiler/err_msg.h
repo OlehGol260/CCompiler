@@ -29,7 +29,7 @@ public:
 		AbortMsg("Invalid next token after: " + cur + "  Meet: " + next);
 	}
 
-	static void AbortInvalidVariable(const std::string& var_name)
+	static void AbortInvalidVariableName(const std::string& var_name)
 	{
 		AbortMsg("Variable " + var_name + " containes prohibited symbols");
 	}

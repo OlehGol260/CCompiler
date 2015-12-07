@@ -40,11 +40,19 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 		{
 			next_token_type = LT::kUnknown;
 		}
-		//there is no kReservedWord, becase kUnknow case determine how to begin to parse
+
 		switch (state)
 		{
 		case LT::kReservedWord:
-			if (Grammar::IsOpenParenthesis(next_token_type))
+			if (!Grammar::IsOpenParenthesis(next_token_type))
+			{
+				is_next_token_invalid = true;
+			}
+			else
+			{
+				state = next_token_type;
+			}
+			break;
 		case LT::kBinaryOperator:
 			switch (next_token_type)
 			{
@@ -89,7 +97,7 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 		case LT::kVar:
 			if (!IsVariableValid(current_lexem->value()))
 			{
-				ErrMessage::AbortInvalidVariable(current_lexem->value());
+				ErrMessage::AbortInvalidVariableName(current_lexem->value());
 			}
 			switch (next_token_type)
 			{

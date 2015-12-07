@@ -7,11 +7,10 @@
 class Context
 {
 public:
-	explicit Context(int level) : begin_(nullptr), end_(nullptr), level_(level) {}
+	explicit Context(int level) : begin_(nullptr), end_(nullptr) {}
 	Context(std::shared_ptr<LexemInterface> open, std::shared_ptr<LexemInterface> close) : begin_(open), end_(close) {}
 	void AddStatement(std::shared_ptr<Statement> st) { roots_.push_back(st); };
 	auto roots() const { return roots_; }
-	auto level() const { return level_; }
 
 	auto begin() { return begin_; }
 	auto end() { return end_; }
@@ -23,5 +22,4 @@ private:
 	std::shared_ptr<LexemInterface> begin_;
 	std::shared_ptr<LexemInterface> end_;
 	std::vector<std::shared_ptr<Statement>> roots_;
-	int level_;
 };
