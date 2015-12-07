@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <string>
 #include <vector>
-#include "lexem.h"
+#include "lexeme.h"
 
 class Lexer
 {
@@ -11,5 +11,5 @@ public:
 	auto lexems() const noexcept { return lexems_; }
 	void print() const;
 private:
-	std::vector<std::shared_ptr<LexemInterface>> lexems_;
+	std::vector<std::shared_ptr<LexemeInterface>> lexems_;
 };

@@ -1,14 +1,14 @@
 ﻿#include "control_flow_parser.h"
 
-#include "lexem_reserved.h"
 #include "grammar.h"
 #include "statement_parser.h"
+#include "lexeme_loop.h"
 
-std::shared_ptr<Statement> ControlFlowParser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
+std::shared_ptr<Statement> ControlFlowParser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 {
 	auto statement = std::make_shared<Statement>();
 
-	auto reserved_word = std::static_pointer_cast<LexemReserved>(lexems.front());
+	auto reserved_word = std::static_pointer_cast<LexemeLoop>(lexems.front());
 
 	auto cbegin = lexems.cbegin();
 	auto cend = lexems.cend();
@@ -20,13 +20,13 @@ std::shared_ptr<Statement> ControlFlowParser::Parse(const std::vector<std::share
 	return statement;
 }
 
-std::shared_ptr<Context> ControlFlowParser::ParseCondition(const std::vector<std::shared_ptr<LexemInterface>>& cond_lexems)
+std::shared_ptr<Context> ControlFlowParser::ParseCondition(const std::vector<std::shared_ptr<LexemeInterface>>& cond_lexems)
 {
 	if (cond_lexems.empty()) { return nullptr; }
 
 	auto cond_context = std::make_shared<Context>(cond_lexems.front(), cond_lexems.back());
-	std::vector<std::shared_ptr<LexemInterface>> statement_lexem_interfs;
-	std::shared_ptr<LexemInterface> curr_lexem = nullptr;
+	std::vector<std::shared_ptr<LexemeInterface>> statement_lexem_interfs;
+	std::shared_ptr<LexemeInterface> curr_lexem = nullptr;
 	auto cond_lexems_back = cond_lexems.back();
 	for (auto it = cond_lexems.cbegin(); it != cond_lexems.cend(); ++it)
 	{
@@ -41,15 +41,15 @@ std::shared_ptr<Context> ControlFlowParser::ParseCondition(const std::vector<std
 	return cond_context;
 }
 
-std::shared_ptr<Context> ControlFlowParser::ParseBody(const std::vector<std::shared_ptr<LexemInterface>>& body_lexems)
+std::shared_ptr<Context> ControlFlowParser::ParseBody(const std::vector<std::shared_ptr<LexemeInterface>>& body_lexems)
 {
 	if (body_lexems.empty()) { return nullptr; }
 
 	auto body_context = std::make_shared<Context>(body_lexems.front(), body_lexems.back());
-	std::vector<std::shared_ptr<LexemInterface>> statement_lexem_interfs;
-	std::shared_ptr<LexemInterface> curr_lexem = nullptr;
+	std::vector<std::shared_ptr<LexemeInterface>> statement_lexem_interfs;
+	std::shared_ptr<LexemeInterface> curr_lexem = nullptr;
 	auto body_lexems_back = body_lexems.back();
-	LexemType curr_lexem_type;
+	LexemeType curr_lexem_type;
 
 	for (auto it = body_lexems.cbegin(); it != body_lexems.cend(); ++it)
 	{
@@ -73,15 +73,14 @@ std::shared_ptr<Context> ControlFlowParser::ParseBody(const std::vector<std::sha
 	return body_context;
 }
 
-std::vector<std::shared_ptr<LexemInterface>> ControlFlowParser::FindControlFlowStatement(lexem_interfaces_iter cbegin, lexem_interfaces_iter cend)
+std::vector<std::shared_ptr<LexemeInterface>> ControlFlowParser::FindControlFlowStatement(lexeme_interfaces_iter cbegin, lexeme_interfaces_iter cend)
 {
-	std::vector<std::shared_ptr<LexemInterface>> result;
-	std::shared_ptr<LexemInterface> curr_lexem = nullptr;
+	std::vector<std::shared_ptr<LexemeInterface>> result;
+	std::shared_ptr<LexemeInterface> curr_lexem = nullptr;
 	auto opened_braces_count = 0;
-	auto found_finite_block = false; //TODO: ask Max if it's better to do so rather than use 'break' 
-	LexemType curr_lexem_type;
+	LexemeType curr_lexem_type;
 
-	for (auto it = cbegin; !found_finite_block && it != cend; ++it)
+	for (auto it = cbegin; it != cend; ++it)
 	{
 		curr_lexem = *it;
 		curr_lexem_type = curr_lexem->type();
@@ -92,30 +91,30 @@ std::vector<std::shared_ptr<LexemInterface>> ControlFlowParser::FindControlFlowS
 		}
 		if (Grammar::IsCloseBrace(curr_lexem_type) && !--opened_braces_count)
 		{
-			found_finite_block = true;
+			break;
 		}
 	}
 	return result;
 }
 
-std::vector<std::shared_ptr<LexemInterface>> ControlFlowParser::FindCondition(lexem_interfaces_iter begin, lexem_interfaces_iter end)
+std::vector<std::shared_ptr<LexemeInterface>> ControlFlowParser::FindCondition(lexeme_interfaces_iter begin, lexeme_interfaces_iter end)
 {
 	return FindBlock(begin, end, Grammar::open_parenthesis(), Grammar::close_parenthesis());
 }
 
-std::vector<std::shared_ptr<LexemInterface>> ControlFlowParser::FindBody(lexem_interfaces_iter begin, lexem_interfaces_iter end)
+std::vector<std::shared_ptr<LexemeInterface>> ControlFlowParser::FindBody(lexeme_interfaces_iter begin, lexeme_interfaces_iter end)
 {
 	return FindBlock(begin, end, Grammar::open_brace(), Grammar::close_brace());
 }
 
-std::vector<std::shared_ptr<LexemInterface>> ControlFlowParser::FindBlock(lexem_interfaces_iter begin, lexem_interfaces_iter end, const std::string& open, const std::string& close)
+std::vector<std::shared_ptr<LexemeInterface>> ControlFlowParser::FindBlock(lexeme_interfaces_iter begin, lexeme_interfaces_iter end, const std::string& open, const std::string& close)
 {
 	auto opened_bracket_count = 0;
-	auto is_found = false;
-	std::shared_ptr<LexemInterface> current_token = nullptr;
+	std::shared_ptr<LexemeInterface> current_token = nullptr;
 	std::string current_token_value;
-	std::vector<std::shared_ptr<LexemInterface>> result_lexems;
-	for (auto it = begin; !is_found && it != end; ++it)
+	std::vector<std::shared_ptr<LexemeInterface>> result_lexems;
+
+	for (auto it = begin;it != end; ++it)
 	{
 		current_token = *it;
 		current_token_value = current_token->value();
@@ -125,7 +124,7 @@ std::vector<std::shared_ptr<LexemInterface>> ControlFlowParser::FindBlock(lexem_
 		}
 		if (current_token_value == close && !--opened_bracket_count)
 		{
-			is_found = true; 
+			break;
 		}
 		if (opened_bracket_count) // only if in scope.
 		{

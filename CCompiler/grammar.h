@@ -1,10 +1,8 @@
 #pragma once
 
 #include <vector>
-#include <algorithm>
 
-#include "bracket.h"
-#include "lexem.h"
+#include "lexeme.h"
 
 class Grammar
 {
@@ -18,7 +16,7 @@ public:
 	static bool IsOperator(const T& t)
 	{
 		return IsBinaryOperator(t) || IsBracket(t) ||
-			IsPunctuator(t) || IsVarType(t);
+			IsPunctuator(t) || IsVarType(t) || IsDoubleQuote(t);
 	}
 
 	template<typename T>
@@ -34,7 +32,6 @@ public:
 		return std::find(vec.cbegin(), vec.cend(), t) != vec.cend();
 	}
 
-
 	static bool IsReservedWord(const std::string& to_check);
 	static bool IsAssignment(const std::string& to_check);
 	static bool IsPunctuator(const std::string& to_check);
@@ -45,30 +42,44 @@ public:
 	static bool IsCloseBrace(const std::string& to_check);
 	static bool IsOpenParenthesis(const std::string& to_check);
 	static bool IsCloseParenthesis(const std::string& to_check);
-	static bool IsDoubleQuote(const LexemType& t);
+	static bool IsLoop(const std::string& str);
+	static bool IsIf(const std::string& str);
+	static bool IsElse(const std::string& str);
+	static bool IsPrint(const std::string& str);
+
+
+
+	static bool IsDoubleQuote(const LexemeType& t);
 	static bool IsDoubleQuote(const std::string& to_check);
-	static bool IsBinaryOperator(const LexemType& t);
-	static bool IsReservedWord(const LexemType& t);
-	static bool IsAssignment(const LexemType& t);
-	static bool IsPunctuator(const LexemType& t);
-	static bool IsVarType(const LexemType& t);
-	static bool IsLogicalNot(const LexemType& t);
-	static bool IsOpenBrace(const LexemType& t);
-	static bool IsCloseBrace(const LexemType& t);
-	static bool IsOpenParenthesis(const LexemType& t);
-	static bool IsCloseParenthesis(const LexemType& t);
-	static bool IsVariable(const LexemType& t);
-	static bool IsLiteral(const LexemType& t);
-	static LexemType GetType(const std::string& to_check);
+	static bool IsBinaryOperator(const LexemeType& t);
+	static bool IsReservedWord(const LexemeType& t);
+	static bool IsAssignment(const LexemeType& t);
+	static bool IsPunctuator(const LexemeType& t);
+	static bool IsVarType(const LexemeType& t);
+	static bool IsLogicalNot(const LexemeType& t);
+	static bool IsOpenBrace(const LexemeType& t);
+	static bool IsCloseBrace(const LexemeType& t);
+	static bool IsOpenParenthesis(const LexemeType& t);
+	static bool IsCloseParenthesis(const LexemeType& t);
+	static bool IsVariable(const LexemeType& t);
+	static bool IsLiteral(const LexemeType& t);
+	static bool IsLoop(const LexemeType& t);
+	static bool IsIf(const LexemeType& t);
+	static bool IsElse(const LexemeType& t);
+	static bool IsPrint(const LexemeType& t);
+	static LexemeType GetType(const std::string& to_check);
 
 	static auto& open_parenthesis() { return kOpenParenthesis_; }
 	static auto& close_parenthesis() { return kCloseParenthesis_; }
 	static auto& open_brace() { return kOpenBrace_; }
 	static auto& close_brace() { return kCloseBrace_; }
 
-	static auto& reserved_words()
+	static auto& if_st() { return kIf_; }
+	static auto& else_st() { return kElse_; }
+	static auto& print() { return kPrint_; }
+	static auto& loop()
 	{
-		return kReservedWords_;
+		return kLoop_;
 	}
 	static auto& binary_operators()
 	{
@@ -92,13 +103,16 @@ private:
 	static const std::string kCloseBrace_;
 	static const std::string kOpenParenthesis_;
 	static const std::string kCloseParenthesis_;
-	static const std::vector<std::string> kReservedWords_;
+	static const std::string kIf_;
+	static const std::string kElse_;
+	static const std::string kPrint_;
+	static const std::vector<std::string> kLoop_;
 	static const std::vector<std::string> kBinaryOperators;
 	static const std::vector<std::string> kTypes_;
 	static const std::string kAssignment_;
 	static const std::string kPunctuator_;
 	static const std::string kLogicalNot_;
-	static const std::string kDoubleQoute_;
+	static const std::string kDoubleQuote_;
 };
 
 

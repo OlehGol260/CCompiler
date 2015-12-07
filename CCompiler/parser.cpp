@@ -9,12 +9,12 @@
 #include "control_flow_parser.h"
 
 //outer_state = current_lexem_type == LexemType::kReservedWord ? State::kReservedWordPart : State::kSimplePart;
-void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
+void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 {
 	auto state = LT::kUnknown;
-	std::shared_ptr<LexemInterface> next_token = nullptr;
+	std::shared_ptr<LexemeInterface> next_token = nullptr;
 	auto next_token_type = LT::kUnknown; //type of next lexem determine the next state, as it may be ambiguouse
-	lexems_interface_vec lexems_block;
+	lexem_interface_vec lexems_block;
 
 	auto open_parenthesis_count = 0;
 	auto open_brace_count = 0;
@@ -24,10 +24,21 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 
 	auto is_next_token_invalid = false;
 
+	auto is_double_quote_scope = false;
+
 	for (size_t i = 0; i < lexems_size; i++)
 	{
 		auto current_lexem = lexems.at(i);
 		auto current_lexem_type = current_lexem->type();
+		
+		if (is_double_quote_scope)
+		{
+			if (Grammar::IsDoubleQuote(current_lexem_type))
+			{
+				is_double_quote_scope = false;
+			}
+			continue;
+		}
 
 		if (i < lexems_size - 1)
 		{
@@ -41,16 +52,20 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 
 		switch (state)
 		{
-		case LT::kReservedWord:
-			if (!Grammar::IsOpenParenthesis(next_token_type))
-			{
-				is_next_token_invalid = true;
-			}
-			else
-			{
-				state = next_token_type;
-			}
+		case LT::kDoubleQoute:
+			is_double_quote_scope = true;
+			state = LT::kCloseParenthesis;
 			break;
+		//case LT::kReservedWord:
+		//	if (!Grammar::IsOpenParenthesis(next_token_type))
+		//	{
+		//		is_next_token_invalid = true;
+		//	}
+		//	else
+		//	{
+		//		state = next_token_type;
+		//	}
+		//	break;
 		case LT::kBinaryOperator:
 			switch (next_token_type)
 			{
@@ -131,7 +146,6 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			case LT::kVarType:
 			case LT::kVar:
 			case LT::kOpenBrace:
-			case LT::kReservedWord:
 				state = next_token_type;
 				break;
 			default:
@@ -163,6 +177,7 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 			case LT::kOpenParenthesis:
 			case LT::kLiteral:
 			case LT::kVarType:
+			case LT::kDoubleQoute:
 				state = next_token_type;
 				break;
 			default:
@@ -201,9 +216,9 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 		case LT::kUnknown:	// new chunk will be checked here
 			switch (current_lexem_type)
 			{
-			case LT::kReservedWord:
-				state = LT::kOpenParenthesis;
-				break;
+			//case LT::kReservedWord:
+			//	state = LT::kOpenParenthesis;
+			//	break;
 			case LT::kVarType:
 				state = LT::kVar;
 				break;

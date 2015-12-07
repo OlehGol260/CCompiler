@@ -1,9 +1,12 @@
 #pragma once
 
 #include <map>
-enum class LexemType
+enum class LexemeType
 {
-	kReservedWord,
+	kLoop,
+	kElse,
+	kIf,
+	kPrint,
 	kBinaryOperator,
 	kPunctuator,
 	kAssignment,
@@ -18,6 +21,7 @@ enum class LexemType
 	kLogicalNot,
 	kVarDeclaration,
 	kDoubleQoute,
+	kStringLiteral,
 };
 
 enum class BracketType
@@ -33,19 +37,23 @@ enum class WhereAttachCh
 	kUnknown
 };
 
-static const std::map<LexemType, std::string> LexemTypeNames{
-	{ LexemType::kDoubleQoute, "Double quote"},
-	{ LexemType::kLogicalNot, "Logical not"},
-	{ LexemType::kVarType, "Type_specifier"},
-	{ LexemType::kVar, "Variable" },
-	{ LexemType::kReservedWord, "Reserved_word" },
-	{ LexemType::kBinaryOperator, "Binary operator"},
-	{ LexemType::kLiteral, "Literal" },
-	{ LexemType::kOpenBrace, "Open Brace" },
-	{ LexemType::kCloseBrace, "Close Brace" },
-	{ LexemType::kOpenParenthesis, "Open parenthesis" },
-	{ LexemType::kCloseParenthesis, "Close parenthesis" },
-	{ LexemType::kPunctuator, "Semicolon" },
-	{ LexemType::kAssignment, "Assignment_operator" },
-	{ LexemType::kUnknown, "Unknown type" },
+static const std::map<LexemeType, std::string> LexemTypeNames{
+	{ LexemeType::kDoubleQoute, "Double quote"},
+	{ LexemeType::kLogicalNot, "Logical not"},
+	{ LexemeType::kVarType, "Type_specifier"},
+	{ LexemeType::kVar, "Variable" },
+	{ LexemeType::kLoop, "Loop"},
+	{ LexemeType::kIf, "If statement"},
+	{ LexemeType::kElse, "Else statement"},
+	{ LexemeType::kLoop, "Loop"},
+	{ LexemeType::kBinaryOperator, "Binary operator"},
+	{ LexemeType::kLiteral, "Literal" },
+	{ LexemeType::kOpenBrace, "Open Brace" },
+	{ LexemeType::kCloseBrace, "Close Brace" },
+	{ LexemeType::kOpenParenthesis, "Open parenthesis" },
+	{ LexemeType::kCloseParenthesis, "Close parenthesis" },
+	{ LexemeType::kPunctuator, "Semicolon" },
+	{ LexemeType::kAssignment, "Assignment_operator" },
+	{ LexemeType::kUnknown, "Unknown type" },
+	{ LexemeType::kStringLiteral, "String literal"}
 };

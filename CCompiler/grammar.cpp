@@ -6,12 +6,9 @@ const std::string Grammar::kCloseBrace_ = "}";
 const std::string Grammar::kOpenParenthesis_ = "(";
 const std::string Grammar::kCloseParenthesis_ = ")";
 
-const std::vector<std::string> Grammar::kReservedWords_ = {
+const std::vector<std::string> Grammar::kLoop_ = {
 	"for",
 	"while",
-	"if",
-	"else",
-	"print",
 };
 
 const std::vector<std::string> Grammar::kTypes_ = {
@@ -35,7 +32,11 @@ const std::vector<std::string> Grammar::kBinaryOperators = {
 	"/",
 	"%",
 };
-const std::string Grammar::kDoubleQoute_ = "\"";
+const std::string Grammar::kDoubleQuote_ = "\"";
+
+const std::string Grammar::kIf_ = "if";
+const std::string Grammar::kElse_ = "else";
+const std::string Grammar::kPrint_ = "print";
 
 const std::string Grammar::kAssignment_ = "=";
 
@@ -45,7 +46,7 @@ const std::string Grammar::kLogicalNot_ = "!";
 
 bool Grammar::IsReservedWord(const std::string& to_check)
 {
-	return IsInVector(to_check, kReservedWords_);
+	return IsInVector(to_check, kLoop_);
 }
 
 bool Grammar::IsAssignment(const std::string& to_check)
@@ -73,65 +74,80 @@ bool Grammar::IsBinaryOperator(const std::string& to_check)
 	return IsInVector(to_check, kBinaryOperators);
 }
 
-bool Grammar::IsBinaryOperator(const LexemType& t)
+bool Grammar::IsBinaryOperator(const LexemeType& t)
 {
 	//TODO: WORKAROUND, may be reconsidered
-	return t == LexemType::kBinaryOperator || t == LexemType::kAssignment;
+	return t == LexemeType::kBinaryOperator || t == LexemeType::kAssignment;
 }
 
-bool Grammar::IsReservedWord(const LexemType& t)
+bool Grammar::IsReservedWord(const LexemeType& t)
 {
-	return t == LexemType::kReservedWord;
+	return IsLoop(t) || IsPrint(t) || IsIf(t) || IsElse(t);
 }
 
-bool Grammar::IsAssignment(const LexemType& t)
+bool Grammar::IsAssignment(const LexemeType& t)
 {
-	return t == LexemType::kAssignment;
+	return t == LexemeType::kAssignment;
 }
 
-bool Grammar::IsPunctuator(const LexemType& t)
+bool Grammar::IsPunctuator(const LexemeType& t)
 {
-	return t == LexemType::kPunctuator;
+	return t == LexemeType::kPunctuator;
 }
 
-bool Grammar::IsVarType(const LexemType& t)
+bool Grammar::IsVarType(const LexemeType& t)
 {
-	return t == LexemType::kVarType;
+	return t == LexemeType::kVarType;
 }
 
-bool Grammar::IsLogicalNot(const LexemType& t)
+bool Grammar::IsLogicalNot(const LexemeType& t)
 {
-	return t == LexemType::kLogicalNot;
+	return t == LexemeType::kLogicalNot;
 }
 
-bool Grammar::IsOpenBrace(const LexemType& t)
+bool Grammar::IsOpenBrace(const LexemeType& t)
 {
-	return t == LexemType::kOpenBrace;
+	return t == LexemeType::kOpenBrace;
 }
 
-bool Grammar::IsCloseBrace(const LexemType& t)
+bool Grammar::IsCloseBrace(const LexemeType& t)
 {
-	return t == LexemType::kCloseBrace;
+	return t == LexemeType::kCloseBrace;
 }
 
-bool Grammar::IsOpenParenthesis(const LexemType& t)
+bool Grammar::IsOpenParenthesis(const LexemeType& t)
 {
-	return t == LexemType::kOpenParenthesis;
+	return t == LexemeType::kOpenParenthesis;
 }
 
-bool Grammar::IsCloseParenthesis(const LexemType& t)
+bool Grammar::IsCloseParenthesis(const LexemeType& t)
 {
-	return t == LexemType::kCloseParenthesis;
+	return t == LexemeType::kCloseParenthesis;
 }
 
-bool Grammar::IsVariable(const LexemType& t)
+bool Grammar::IsVariable(const LexemeType& t)
 {
-	return t == LexemType::kVar;
+	return t == LexemeType::kVar;
 }
 
-bool Grammar::IsLiteral(const LexemType& t)
+bool Grammar::IsLiteral(const LexemeType& t)
 {
-	return t == LexemType::kLiteral;
+	return t == LexemeType::kLiteral;
+}
+
+bool Grammar::IsLoop(const LexemeType& t)
+{
+	return t == LexemeType::kLoop;
+}
+
+bool Grammar::IsIf(const LexemeType& t)
+{
+	return t == LexemeType::kIf;
+}
+
+bool Grammar::IsElse(const LexemeType& t)
+{
+	return t == LexemeType::kElse;
 }
 
 bool Grammar::IsOpenBrace(const std::string& to_check)
@@ -154,27 +170,56 @@ bool Grammar::IsCloseParenthesis(const std::string& to_check)
 	return to_check == kCloseParenthesis_;
 }
 
-bool Grammar::IsDoubleQuote(const LexemType& t)
+bool Grammar::IsLoop(const std::string& str)
 {
-	return t == LexemType::kDoubleQoute;
+	return IsInVector(str, kLoop_);
+}
+
+bool Grammar::IsIf(const std::string& str)
+{
+	return str == kIf_;
+}
+
+bool Grammar::IsElse(const std::string& str)
+{
+	return str == kElse_;
+}
+
+bool Grammar::IsPrint(const std::string& str)
+{
+	return str == kPrint_;
+}
+
+bool Grammar::IsDoubleQuote(const LexemeType& t)
+{
+	return t == LexemeType::kDoubleQoute;
 }
 
 bool Grammar::IsDoubleQuote(const std::string& to_check)
 {
-	return to_check == kDoubleQoute_;
+	return to_check == kDoubleQuote_;
 }
 
-LexemType Grammar::GetType(const std::string& to_check)
+bool Grammar::IsPrint(const LexemeType& t)
 {
-	if (IsVarType(to_check)) { return LexemType::kVarType; }
-	if (IsAssignment(to_check)) { return LexemType::kAssignment; }
-	if (IsBinaryOperator(to_check)) { return LexemType::kBinaryOperator; }
-	if (IsOpenBrace(to_check)) { return LexemType::kOpenBrace; }
-	if (IsCloseBrace(to_check)) { return LexemType::kCloseBrace; }
-	if (IsOpenParenthesis(to_check)) { return LexemType::kOpenParenthesis; }
-	if (IsCloseParenthesis(to_check)) { return LexemType::kCloseParenthesis; }
-	if (IsPunctuator(to_check)) { return LexemType::kPunctuator; }
-	if (utils::IsNumber(to_check)) { return LexemType::kLiteral; }
-	if (IsDoubleQuote(to_check)) { return LexemType::kDoubleQoute; }
-	return IsReservedWord(to_check) ? LexemType::kReservedWord : LexemType::kVar;
+	return t == LexemeType::kPrint;
+}
+
+LexemeType Grammar::GetType(const std::string& str)
+{
+	if (IsVarType(str)) { return LexemeType::kVarType; }
+	if (IsAssignment(str)) { return LexemeType::kAssignment; }
+	if (IsBinaryOperator(str)) { return LexemeType::kBinaryOperator; }
+	if (IsOpenBrace(str)) { return LexemeType::kOpenBrace; }
+	if (IsCloseBrace(str)) { return LexemeType::kCloseBrace; }
+	if (IsOpenParenthesis(str)) { return LexemeType::kOpenParenthesis; }
+	if (IsCloseParenthesis(str)) { return LexemeType::kCloseParenthesis; }
+	if (IsPunctuator(str)) { return LexemeType::kPunctuator; }
+	if (utils::IsNumber(str)) { return LexemeType::kLiteral; }
+	if (IsDoubleQuote(str)) { return LexemeType::kDoubleQoute; }
+	if (IsIf(str)) { return LexemeType::kIf; }
+	if (IsElse(str)) { return LexemeType::kElse; }
+	if (IsLoop(str)) { return LexemeType::kLoop; }
+	if (IsPrint(str)) { return LexemeType::kPrint; }
+	return LexemeType::kVar;
 }

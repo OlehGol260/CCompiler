@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 
-#include "lexem_interface.h"
+#include "lexeme_interface.h"
 #include "context.h"
 
 class Parser
@@ -12,7 +12,7 @@ public:
 	Parser() : main_context_(std::make_shared<Context>(0)) {}
 	~Parser() = default;
 
-	void Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems);
+	void Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems);
 private:
 	static bool IsVariableValid(const std::string& var_name);
 private:

@@ -1,9 +1,10 @@
 ﻿#include "statement_parser.h"
 
 #include "grammar.h"
+#include "lexeme.h"
 
 
-std::shared_ptr<Statement> StatementParser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
+std::shared_ptr<Statement> StatementParser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 {
 	if (lexems.empty()) { return nullptr; }
 
@@ -17,9 +18,9 @@ std::shared_ptr<Statement> StatementParser::Parse(const std::vector<std::shared_
 		//	so if we don't want to include the last element, we subtract 1, so it != end will trigger at the last element
 		is_var_decl = 1; 
 
-		auto var_init = std::make_shared<Lexem>(LT::kVarDeclaration, "DEF");
-		var_init->set_left(std::static_pointer_cast<Lexem>(lexems.at(0)));
-		var_init->set_right(std::static_pointer_cast<Lexem>(lexems.at(1)));
+		auto var_init = std::make_shared<Lexeme>(LT::kVarDeclaration, "DEF");
+		var_init->set_left(std::static_pointer_cast<Lexeme>(lexems.at(0)));
+		var_init->set_right(std::static_pointer_cast<Lexeme>(lexems.at(1)));
 		statement->set_var_init(var_init);
 	}
 	if (Grammar::IsPunctuator(lexems.back()->type()))
@@ -33,12 +34,12 @@ std::shared_ptr<Statement> StatementParser::Parse(const std::vector<std::shared_
 	return statement;
 }
 
-std::shared_ptr<LexemInterface> StatementParser::InnerStatParse(std::shared_ptr<LexemInterface> parent, const WhereAttachCh&& side, lexem_interfaces_reverse_iter rbegin, lexem_interfaces_reverse_iter rend)
+std::shared_ptr<LexemeInterface> StatementParser::InnerStatParse(std::shared_ptr<LexemeInterface> parent, const WhereAttachCh&& side, lexeme_interfaces_reverse_iter rbegin, lexeme_interfaces_reverse_iter rend)
 {
 	auto curr_level = GetLowestLevel(rbegin, rend);
 
-	std::shared_ptr<LexemInterface> current_token = nullptr; //if only literal passed, following loops won't be executed and current token will hold the literal as needed
-	std::shared_ptr<LexemInterface> result_token = nullptr;
+	std::shared_ptr<LexemeInterface> current_token = nullptr; //if only literal passed, following loops won't be executed and current token will hold the literal as needed
+	std::shared_ptr<LexemeInterface> result_token = nullptr;
 	auto found_needed_op = false;
 
 	for (auto it_bin = Grammar::binary_operators().cbegin(); !found_needed_op && it_bin != Grammar::binary_operators().cend(); ++it_bin)
@@ -60,7 +61,7 @@ std::shared_ptr<LexemInterface> StatementParser::InnerStatParse(std::shared_ptr<
 	}
 	if (!parent) { return result_token; }
 
-	auto parent_ = std::static_pointer_cast<Lexem>(parent);
+	auto parent_ = std::static_pointer_cast<Lexeme>(parent);
 	if (side == WhereAttachCh::kLeft)
 	{
 		parent_->set_left(result_token);
@@ -72,7 +73,7 @@ std::shared_ptr<LexemInterface> StatementParser::InnerStatParse(std::shared_ptr<
 	return parent;
 }
 
-int StatementParser::GetLowestLevel(lexem_interfaces_reverse_iter rbegin, lexem_interfaces_reverse_iter rend)
+int StatementParser::GetLowestLevel(lexeme_interfaces_reverse_iter rbegin, lexeme_interfaces_reverse_iter rend)
 {
 	auto min_lvl = 10000;
 	for (auto it = rbegin; it != rend ; ++it)

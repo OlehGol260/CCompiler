@@ -137,9 +137,11 @@
     <ClInclude Include="enums.h" />
     <ClInclude Include="err_msg.h" />
     <ClInclude Include="grammar.h" />
-    <ClInclude Include="lexem.h" />
-    <ClInclude Include="lexem_interface.h" />
-    <ClInclude Include="lexem_reserved.h" />
+    <ClInclude Include="lexeme.h" />
+    <ClInclude Include="lexeme_condition.h" />
+    <ClInclude Include="lexeme_interface.h" />
+    <ClInclude Include="lexeme_loop.h" />
+    <ClInclude Include="lexeme_print.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="output.h" />
     <ClInclude Include="parser.h" />

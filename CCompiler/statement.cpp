@@ -9,14 +9,14 @@ void Statement::Print() const
 	InnerPrint(root_);
 }
 
-void Statement::InnerPrint(std::shared_ptr<LexemInterface> lexem) const
+void Statement::InnerPrint(std::shared_ptr<LexemeInterface> lexem) const
 {
 	if (!lexem)
 	{
 		return;
 	}
 
-	auto lexem_ = std::static_pointer_cast<Lexem>(lexem);
+	auto lexem_ = std::static_pointer_cast<Lexeme>(lexem);
 
 	auto value = lexem->value();
 	if (!(Grammar::IsVariable(lexem->type()) || Grammar::IsLiteral(lexem_->type())))

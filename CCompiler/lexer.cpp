@@ -4,26 +4,42 @@
 
 #include "grammar.h"
 #include <iostream>
-#include "lexem.h"
-#include "lexem_reserved.h"
+#include "lexeme.h"
+#include "lexeme_loop.h"
 
 void Lexer::GenerateLexems(const std::string& code)
 {
 	std::stringstream ss(AddSpaces(code));
+	std::stringstream ss_str_literal;
+	auto is_double_quoted_scope = false;
 	std::string token = "";
 	auto i = 0;
 	while(ss >> token) {
 		auto type = Grammar::GetType(token);
-		std::shared_ptr<LexemInterface> lexem = nullptr;
-		if (type == LexemType::kReservedWord)
+		if (Grammar::IsDoubleQuote(type))
 		{
-			lexem = std::make_shared<LexemReserved>(type, token);
+			is_double_quoted_scope = !is_double_quoted_scope;
+			continue;
+		}
+		if (is_double_quoted_scope)
+		{
+			ss_str_literal << token;
+			continue;
+		}
+		std::shared_ptr<LexemeInterface> lexeme = nullptr;
+		if (ss_str_literal)
+		{
+			lexeme = std::make_shared<Lexeme>(LexemeType::kStringLiteral, ss_str_literal.str());
+		}
+		if (Grammar::IsReservedWord(type))
+		{
+			lexeme = std::make_shared<LexemeLoop>(type, token);
 		}
 		else
 		{
-			lexem = std::make_shared<Lexem>(type, token);
+			lexeme = std::make_shared<Lexeme>(type, token);
 		}
-		lexems_.push_back(lexem);
+		lexems_.push_back(lexeme);
 	}
 }
 
@@ -31,6 +47,7 @@ std::string Lexer::AddSpaces(const std::string& code)
 {
 	auto code_size = code.size();
 	std::stringstream ss;
+	auto is_double_quoted_scope = false;
 	for (size_t i = 0; i < code_size; i++)
 	{
 		auto str = std::string(1, code.at(i));
@@ -45,8 +62,12 @@ std::string Lexer::AddSpaces(const std::string& code)
 				i++;
 			}	
 		}
-		
-		if (Grammar::IsOperator(str))
+		if (Grammar::IsDoubleQuote(str))
+		{
+			is_double_quoted_scope = !is_double_quoted_scope;
+		}
+
+		if (!is_double_quoted_scope && Grammar::IsOperator(str))
 		{
 			ss << " " << str << " ";
 		}

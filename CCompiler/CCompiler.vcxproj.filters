@@ -77,9 +77,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="lexem.h">
-      <Filter>Source Files\core\lexem</Filter>
-    </ClInclude>
     <ClInclude Include="context.h">
       <Filter>Source Files\core\context</Filter>
     </ClInclude>
@@ -107,12 +104,6 @@
     <ClInclude Include="context_parser.h">
       <Filter>Source Files\core\context</Filter>
     </ClInclude>
-    <ClInclude Include="lexem_interface.h">
-      <Filter>Source Files\core\lexem</Filter>
-    </ClInclude>
-    <ClInclude Include="lexem_reserved.h">
-      <Filter>Source Files\core\lexem</Filter>
-    </ClInclude>
     <ClInclude Include="compiler.h">
       <Filter>Source Files\core\compiler</Filter>
     </ClInclude>
@@ -133,6 +124,21 @@
     </ClInclude>
     <ClInclude Include="control_flow_parser.h">
       <Filter>Source Files\core\parser\control_flow_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="lexeme.h">
+      <Filter>Source Files\core\lexem</Filter>
+    </ClInclude>
+    <ClInclude Include="lexeme_condition.h">
+      <Filter>Source Files\core\lexem</Filter>
+    </ClInclude>
+    <ClInclude Include="lexeme_interface.h">
+      <Filter>Source Files\core\lexem</Filter>
+    </ClInclude>
+    <ClInclude Include="lexeme_loop.h">
+      <Filter>Source Files\core\lexem</Filter>
+    </ClInclude>
+    <ClInclude Include="lexeme_print.h">
+      <Filter>Source Files\core\lexem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
