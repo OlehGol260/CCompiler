@@ -8,7 +8,7 @@ class Context
 {
 public:
 	explicit Context(int level) : begin_(nullptr), end_(nullptr) {}
-	Context(std::shared_ptr<LexemInterface> open, std::shared_ptr<LexemInterface> close) : begin_(open), end_(close) {}
+	Context(std::shared_ptr<LexemInterface> open, std::shared_ptr<LexemInterface> close) : begin_(open), end_(close), roots_() {}
 	void AddStatement(std::shared_ptr<Statement> st) { roots_.push_back(st); };
 	auto roots() const { return roots_; }
 

@@ -13,11 +13,8 @@ std::shared_ptr<Statement> ControlFlowParser::Parse(const std::vector<std::share
 	auto cbegin = lexems.cbegin();
 	auto cend = lexems.cend();
 
-	auto condition_lexems = FindCondition(cbegin + 1, cend); // + 1 - exclude reserved word itself
-	auto body_lexems = FindBody(cbegin + condition_lexems.size() + 1, cend); // exclude condition, for optimization purposes
-
-	reserved_word->set_condition(ParseCondition(condition_lexems));
-	reserved_word->set_body(ParseBody(body_lexems));
+	reserved_word->set_condition(ParseCondition(FindCondition(cbegin, cend)));
+	reserved_word->set_body(ParseBody(FindBody(cbegin, cend)));
 
 	statement->set_root(reserved_word);
 	return statement;
@@ -54,7 +51,7 @@ std::shared_ptr<Context> ControlFlowParser::ParseBody(const std::vector<std::sha
 	auto body_lexems_back = body_lexems.back();
 	LexemType curr_lexem_type;
 
-	for (auto it = body_lexems.cbegin()+1; it != body_lexems.cend(); ++it)
+	for (auto it = body_lexems.cbegin(); it != body_lexems.cend(); ++it)
 	{
 		curr_lexem = *it;
 		curr_lexem_type = curr_lexem->type();
@@ -66,17 +63,17 @@ std::shared_ptr<Context> ControlFlowParser::ParseBody(const std::vector<std::sha
 		} 
 		if (Grammar::IsReservedWord(curr_lexem_type))
 		{
-			auto reserved_word_block = FindControlFlowBlock(it, body_lexems.cend());
+			auto reserved_word_block = FindControlFlowStatement(it, body_lexems.cend());
 			body_context->AddStatement(ControlFlowParser::Parse(reserved_word_block));
 			statement_lexem_interfs.clear();
-			it += reserved_word_block.size() - 1;
+			it += reserved_word_block.size();
 		}
 	}
 
 	return body_context;
 }
 
-std::vector<std::shared_ptr<LexemInterface>> ControlFlowParser::FindControlFlowBlock(lexem_interfaces_iter cbegin, lexem_interfaces_iter cend)
+std::vector<std::shared_ptr<LexemInterface>> ControlFlowParser::FindControlFlowStatement(lexem_interfaces_iter cbegin, lexem_interfaces_iter cend)
 {
 	std::vector<std::shared_ptr<LexemInterface>> result;
 	std::shared_ptr<LexemInterface> curr_lexem = nullptr;
@@ -122,16 +119,18 @@ std::vector<std::shared_ptr<LexemInterface>> ControlFlowParser::FindBlock(lexem_
 	{
 		current_token = *it;
 		current_token_value = current_token->value();
-		if (current_token_value == open)
+		if (current_token_value == open && !opened_bracket_count++)
 		{
-			opened_bracket_count++;
+			continue; // outer open bracket won't be pushed to a result_lexems
 		}
-		if (current_token_value == close)
+		if (current_token_value == close && !--opened_bracket_count)
 		{
-			opened_bracket_count--;
-			if (!opened_bracket_count) { is_found = true; }
+			is_found = true; 
 		}
-		result_lexems.push_back(current_token);
+		if (opened_bracket_count) // only if in scope.
+		{
+			result_lexems.push_back(current_token);
+		}	
 	}
 	return result_lexems;
 }

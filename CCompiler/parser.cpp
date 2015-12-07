@@ -11,8 +11,6 @@
 //outer_state = current_lexem_type == LexemType::kReservedWord ? State::kReservedWordPart : State::kSimplePart;
 void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 {
-	main_context_ = std::shared_ptr<Context>(0);
-
 	auto state = LT::kUnknown;
 	std::shared_ptr<LexemInterface> next_token = nullptr;
 	auto next_token_type = LT::kUnknown; //type of next lexem determine the next state, as it may be ambiguouse
@@ -138,7 +136,7 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 				break;
 			default:
 				is_next_token_invalid = true;
-			}	
+			}
 			break;
 			///////////////////////////////////////////
 		case LT::kCloseBrace:
@@ -228,15 +226,11 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemInterface>>& lexems)
 
 		if (state == LT::kUnknown && !lexems_block.empty())
 		{
-			if (Grammar::IsReservedWord(lexems_block.front()->type()))
-			{
-				auto st = ControlFlowParser::Parse(lexems_block);
-			}
-			else
-			{
-				auto st = StatementParser::Parse(lexems_block);
-				st->Print();
-			}
+			auto st = Grammar::IsReservedWord(lexems_block.front()->type()) ?
+				ControlFlowParser::Parse(lexems_block) :
+				StatementParser::Parse(lexems_block);
+
+			main_context_->AddStatement(st);
 			lexems_block.clear();
 		}
 
