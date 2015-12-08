@@ -30,4 +30,6 @@ private:
 	static std::vector<std::shared_ptr<LexemeInterface>> FindCurlyBracedBlock(lexeme_interfaces_iter begin, lexeme_interfaces_iter end);
 
 	static std::vector<std::shared_ptr<LexemeInterface>> FindBlock(lexeme_interfaces_iter begin, lexeme_interfaces_iter end, const std::string& open, const std::string& close);
+
+
 };

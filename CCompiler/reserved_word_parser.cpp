@@ -5,6 +5,7 @@
 #include "lexeme_loop.h"
 #include "lexeme_print.h"
 #include <assert.h>
+#include "lexeme_condition.h"
 
 std::shared_ptr<Statement> ReservedWordParser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 {
@@ -30,26 +31,57 @@ std::shared_ptr<Statement> ReservedWordParser::Parse(const std::vector<std::shar
 
 std::shared_ptr<Statement> ReservedWordParser::ParseIfElse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 {
-	return nullptr;
+	assert(!lexems.empty() && "Trying to parse condition: empty lexems");
+
+	auto cond_st = std::make_shared<Statement>();
+
+	auto lexems_front = lexems.front();
+	assert(Grammar::IsIf(lexems_front->type()));
+
+	auto if_lexeme = std::static_pointer_cast<LexemeCondition>(lexems_front);
+	auto cbegin = lexems.cbegin();
+	auto cend = lexems.cend();
+
+
+	auto condition_block = FindParenthesisedBlock(cbegin, cend);
+	auto condition_context = ParseParenthesisedBlock(condition_block);
+	if_lexeme->set_condition(condition_context->GetFirstRoot());
+
+	auto if_curly_braced_block = FindCurlyBracedBlock(cbegin, cend);
+	if_lexeme->set_if_body(ParseCurlyBracedBlock(if_curly_braced_block));
+
+
+	//5 : 1 - if word, 2 - parentheses, 2 - curly braces
+	//if else is present, else_cbegin point at it
+	auto else_cbegin = cbegin + condition_block.size() + if_curly_braced_block.size() + 5;
+
+	if (else_cbegin != cend)
+	{
+		assert(Grammar::IsElse((*else_cbegin)->type()));
+		auto else_curly_braced_block = FindCurlyBracedBlock(else_cbegin, cend);
+		if_lexeme->set_else_body(ParseCurlyBracedBlock(else_curly_braced_block));
+	}
+	cond_st->set_root(if_lexeme);
+	return cond_st;
 }
 
 std::shared_ptr<Statement> ReservedWordParser::ParseLoop(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 {
-	assert(!lexems.empty() && "Trying to loop: empty lexems");
+	assert(!lexems.empty() && "Trying to parse loop: empty lexems");
 
 	auto loop_st = std::make_shared<Statement>();
 
 	auto lexems_front = lexems.front();
 	assert(Grammar::IsLoop(lexems_front->type()));
 
-	auto reserved_word = std::static_pointer_cast<LexemeLoop>(lexems_front);
+	auto loop_lexem = std::static_pointer_cast<LexemeLoop>(lexems_front);
 	auto cbegin = lexems.cbegin();
 	auto cend = lexems.cend();
 
-	reserved_word->set_condition(ParseParenthesisedBlock(FindParenthesisedBlock(cbegin, cend)));
-	reserved_word->set_body(ParseCurlyBracedBlock(FindCurlyBracedBlock(cbegin, cend)));
+	loop_lexem->set_condition(ParseParenthesisedBlock(FindParenthesisedBlock(cbegin, cend)));
+	loop_lexem->set_body(ParseCurlyBracedBlock(FindCurlyBracedBlock(cbegin, cend)));
 
-	loop_st->set_root(reserved_word);
+	loop_st->set_root(loop_lexem);
 	return loop_st;
 }
 

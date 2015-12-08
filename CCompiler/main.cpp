@@ -5,6 +5,8 @@
 
 #include "utils.h"
 #include "parser.h"
+
+
 int main()
 {
 	Lexer lx;
@@ -15,13 +17,12 @@ int main()
 	//lx.GenerateLexems("(a=(b=1));");
 	//lx.GenerateLexems("int a = \"int a = 0;\"");
 	//lx.GenerateLexems("if (a < 10) { int a = 0;} else { a = 20;}");
-	lx.GenerateLexems("print();");
+	lx.GenerateLexems("if (a > 10) { a = 10; } else { a = 20; }");
 
 	lx.print();
 	std::cout << "\n\n\n" << std::endl;
 	Parser p;
 	p.Parse(lx.lexems());
-
 	//std::stringstream ss("print(\"Hello World!\"); int a = 100;");
 	//std::string d;
 	//std::getline(ss, d, ';');
@@ -29,3 +30,5 @@ int main()
 	//std::cout << Lexer::AddSpaces() << std::endl;
 	return 0;
 }
+
+
