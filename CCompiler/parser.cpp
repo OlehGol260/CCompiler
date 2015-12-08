@@ -1,14 +1,12 @@
 ﻿#include "parser.h"
 
-#include <iostream>
 #include <regex>
 
 #include "err_msg.h"
 #include "grammar.h"
 #include "statement_parser.h"
-#include "control_flow_parser.h"
+#include "reserved_word_parser.h"
 
-//outer_state = current_lexem_type == LexemType::kReservedWord ? State::kReservedWordPart : State::kSimplePart;
 void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 {
 	auto state = LT::kUnknown;
@@ -21,24 +19,14 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 
 	lexems_block.clear();
 	auto lexems_size = lexems.size();
-
+	auto is_print = false;
+	auto is_if_block = false; // to detect else
 	auto is_next_token_invalid = false;
-
-	auto is_double_quote_scope = false;
 
 	for (size_t i = 0; i < lexems_size; i++)
 	{
 		auto current_lexem = lexems.at(i);
 		auto current_lexem_type = current_lexem->type();
-		
-		if (is_double_quote_scope)
-		{
-			if (Grammar::IsDoubleQuote(current_lexem_type))
-			{
-				is_double_quote_scope = false;
-			}
-			continue;
-		}
 
 		if (i < lexems_size - 1)
 		{
@@ -50,22 +38,60 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 			next_token_type = LT::kUnknown;
 		}
 
+		if (state == LT::kUnknown) {
+			// new chunk will be checked here
+			switch (current_lexem_type)
+			{
+			case LT::kPrint:
+			case LT::kLoop:
+			case LT::kIf:
+			case LT::kVarType:
+			case LT::kVar:
+				state = current_lexem_type;
+				break;
+			default:
+				ErrMessage::AbortInvalidToken(current_lexem->value());
+			}
+		}
+
 		switch (state)
 		{
+		case LT::kStringLiteral:
+			if (!Grammar::IsCloseParenthesis(next_token_type))
+			{
+				is_next_token_invalid = true;
+			}
+			state = next_token_type;
+			break;
+		case LT::kElse:
+			if (!Grammar::IsOpenBrace(next_token_type))
+			{
+				is_next_token_invalid = true;
+			}
+			state = next_token_type;
+			break;
+		case LT::kPrint:
+			is_print = true;
+			if (!Grammar::IsOpenParenthesis(next_token_type))
+			{
+				is_next_token_invalid = true;
+			}
+			state = next_token_type;
+			break;
+
+		case LT::kIf:
+			is_if_block = true; //break here is ommitted on purpose
+		case LT::kLoop:
+			if (!Grammar::IsOpenParenthesis(next_token_type))
+			{
+				is_next_token_invalid = true;
+			}
+			state = next_token_type;
+
+			break;
 		case LT::kDoubleQoute:
-			is_double_quote_scope = true;
 			state = LT::kCloseParenthesis;
 			break;
-		//case LT::kReservedWord:
-		//	if (!Grammar::IsOpenParenthesis(next_token_type))
-		//	{
-		//		is_next_token_invalid = true;
-		//	}
-		//	else
-		//	{
-		//		state = next_token_type;
-		//	}
-		//	break;
 		case LT::kBinaryOperator:
 			switch (next_token_type)
 			{
@@ -80,7 +106,7 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 			break;
 			///////////////////////////////////////////
 		case LT::kPunctuator:
-			state = (open_parenthesis_count || open_brace_count) ? next_token_type : LT::kUnknown;
+			state = open_parenthesis_count || open_brace_count ? next_token_type : LT::kUnknown;
 			break;
 			///////////////////////////////////////////
 		case LT::kAssignment:
@@ -143,6 +169,8 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 			open_brace_count++;
 			switch (next_token_type)
 			{
+			case LT::kIf:
+			case LT::kPrint:
 			case LT::kVarType:
 			case LT::kVar:
 			case LT::kOpenBrace:
@@ -157,7 +185,15 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 			open_brace_count--;
 			if (open_brace_count == 0)
 			{
-				state = LT::kUnknown;
+				if (is_if_block && Grammar::IsElse(next_token_type))
+				{
+					state = next_token_type;
+					is_if_block = !is_if_block;
+				}
+				else
+				{
+					state = LT::kUnknown;
+				}
 			}
 			else if (open_brace_count > 0 && i < lexems_size - 1) //TODO: test here
 			{
@@ -173,6 +209,12 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 			open_parenthesis_count++;
 			switch (next_token_type)
 			{
+			case LT::kStringLiteral:
+				if (!is_print)
+				{
+					is_next_token_invalid = true;
+					is_print = false;
+				}
 			case LT::kVar:
 			case LT::kOpenParenthesis:
 			case LT::kLiteral:
@@ -212,23 +254,6 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 			state = next_token_type;
 			break;
 		}
-
-		case LT::kUnknown:	// new chunk will be checked here
-			switch (current_lexem_type)
-			{
-			//case LT::kReservedWord:
-			//	state = LT::kOpenParenthesis;
-			//	break;
-			case LT::kVarType:
-				state = LT::kVar;
-				break;
-			case LT::kVar:
-				state = LT::kAssignment;
-				break;
-			default:
-				ErrMessage::AbortInvalidToken(current_lexem->value());
-			}
-			break;
 		}
 
 		if (is_next_token_invalid)
@@ -242,7 +267,7 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 		if (state == LT::kUnknown && !lexems_block.empty())
 		{
 			auto st = Grammar::IsReservedWord(lexems_block.front()->type()) ?
-				ControlFlowParser::Parse(lexems_block) :
+				ReservedWordParser::Parse(lexems_block) :
 				StatementParser::Parse(lexems_block);
 
 			main_context_->AddStatement(st);

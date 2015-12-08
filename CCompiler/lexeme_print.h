@@ -12,7 +12,7 @@ public:
 
 	auto body() const { return body_; }
 
-	void set_body(std::shared_ptr<LexemeInterface> body) { body_ = body; }
+	void set_body(std::shared_ptr<Statement> body) { body_ = body; }
 private:
-	std::shared_ptr<LexemeInterface> body_;
+	std::shared_ptr<Statement> body_;
 };

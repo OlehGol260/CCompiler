@@ -1,6 +1,8 @@
 #pragma once
-#include "lexeme_interface.h"
 #include <memory>
+
+#include "lexeme_interface.h"
+
 
 class LexemeCondition : public LexemeInterface
 {
@@ -15,11 +17,11 @@ public:
 	auto else_body() const { return else_body_; }
 
 	void set_condition(std::shared_ptr<LexemeInterface> cond) { condition_ = cond; }
-	void set_if_body(std::shared_ptr<LexemeInterface> if_body) { if_body_ = if_body; }
-	void set_else_body(std::shared_ptr<LexemeInterface> else_body) { else_body_ = else_body; }
+	void set_if_body(std::shared_ptr<Context> if_body) { if_body_ = if_body; }
+	void set_else_body(std::shared_ptr<Context> else_body) { else_body_ = else_body; }
 private:
 	std::shared_ptr<LexemeInterface> condition_;
-	std::shared_ptr<LexemeInterface> if_body_;
-	std::shared_ptr<LexemeInterface> else_body_;
+	std::shared_ptr<Context> if_body_;
+	std::shared_ptr<Context> else_body_;
 
 };

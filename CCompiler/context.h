@@ -18,6 +18,11 @@ public:
 	void set_begin(std::shared_ptr<LexemeInterface> ch) { begin_ = ch; }
 	void set_end(std::shared_ptr<LexemeInterface> ch) { end_ = ch; }
 
+	std::shared_ptr<Statement> GetFirstRoot() const
+	{
+		if (roots_.empty()) { return nullptr; }
+		return roots_.at(0);
+	}
 private:
 	std::shared_ptr<LexemeInterface> begin_;
 	std::shared_ptr<LexemeInterface> end_;

@@ -55,5 +55,6 @@ static const std::map<LexemeType, std::string> LexemTypeNames{
 	{ LexemeType::kPunctuator, "Semicolon" },
 	{ LexemeType::kAssignment, "Assignment_operator" },
 	{ LexemeType::kUnknown, "Unknown type" },
-	{ LexemeType::kStringLiteral, "String literal"}
+	{ LexemeType::kStringLiteral, "String literal"},
+	{ LexemeType::kPrint, "Print statement"}
 };

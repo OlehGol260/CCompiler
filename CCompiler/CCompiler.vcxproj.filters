@@ -72,7 +72,7 @@
     <ClCompile Include="statement_parser.cpp">
       <Filter>Source Files\core\parser\statement_parser</Filter>
     </ClCompile>
-    <ClCompile Include="control_flow_parser.cpp">
+    <ClCompile Include="reserved_word_parser.cpp">
       <Filter>Source Files\core\parser\control_flow_parser</Filter>
     </ClCompile>
   </ItemGroup>
@@ -122,9 +122,6 @@
     <ClInclude Include="statement_parser.h">
       <Filter>Source Files\core\parser\statement_parser</Filter>
     </ClInclude>
-    <ClInclude Include="control_flow_parser.h">
-      <Filter>Source Files\core\parser\control_flow_parser</Filter>
-    </ClInclude>
     <ClInclude Include="lexeme.h">
       <Filter>Source Files\core\lexem</Filter>
     </ClInclude>
@@ -139,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="lexeme_print.h">
       <Filter>Source Files\core\lexem</Filter>
+    </ClInclude>
+    <ClInclude Include="reserved_word_parser.h">
+      <Filter>Source Files\core\parser\control_flow_parser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
