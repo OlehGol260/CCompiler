@@ -98,7 +98,7 @@ std::shared_ptr<Statement> ReservedWordParser::ParsePrint(const std::vector<std:
 	auto print_block = FindParenthesisedBlock(lexems.cbegin(), lexems.cend());
 	auto print_block_root = ParseParenthesisedBlock(print_block)->GetFirstRoot();
 	assert(print_block_root && "Print statement cannot be empty");
-	print->set_body(print_block_root);
+	print->set_body(print_block_root->root());
 	print_st->set_root(print);
 	auto print_st_semicolon = lexems.back();
 	assert(Grammar::IsPunctuator(print_st_semicolon->type()) && "Print statement must end with semicolon");

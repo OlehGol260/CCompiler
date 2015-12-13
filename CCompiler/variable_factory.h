@@ -26,7 +26,21 @@ public:
 		}
 		return nullptr;
 	}
-
+	static std::shared_ptr<Variable> GenerateAnonym(VariableType type, const std::string& value)
+	{
+		assert(!value.empty() && "Tried to generate empty variable");
+		switch(type)
+		{
+		case VariableType::kInt: 
+			return std::make_shared<VariableInt>("", value); 
+		case VariableType::kBool:
+			return std::make_shared<VariableBool>("", value); 
+		case VariableType::kFloat:
+			return std::make_shared<VariableFloat>("", value);
+		default: break;
+		}
+		return nullptr;
+	}
 	static std::shared_ptr<Variable> Generate(const std::string& type, const std::string& name)
 	{
 		assert(!name.empty() && "Tried to generate empty variable");

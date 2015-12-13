@@ -14,4 +14,5 @@ public:
 private:
 	static std::shared_ptr<LexemeInterface> InnerStatParse(std::shared_ptr<LexemeInterface> parent, const WhereAttachCh&& side, lexeme_interfaces_reverse_iter rbegin, lexeme_interfaces_reverse_iter rend);
 	static int GetLowestLevel(lexeme_interfaces_reverse_iter rbegin, lexeme_interfaces_reverse_iter rend);
+	static std::shared_ptr<LexemeInterface> ParseFunc(std::shared_ptr<LexemeInterface>);
 };

@@ -38,4 +38,8 @@ public:
 	{
 		AbortMsg("Variable " + var_name + " has not been declared");
 	}
+	static void AbortUnhandledOperation(const std::string& op, const std::vector<VariableType> types)
+	{
+		AbortMsg("Try to perform operation '" + op + "' for types: '" + VariableTypeStr.at(types.at(0)) + "' and '" + VariableTypeStr.at(types.at(1)) + "'");
+	}
 };

@@ -1,6 +1,6 @@
 #include "grammar.h"
 #include "utils.h"
-
+#include "err_msg.h"
 const std::string Grammar::kOpenBrace_ = "{";
 const std::string Grammar::kCloseBrace_ = "}";
 const std::string Grammar::kOpenParenthesis_ = "(";
@@ -47,6 +47,23 @@ const std::string Grammar::kPunctuator_ = ";";
 
 const std::string Grammar::kLogicalNot_ = "!";
 
+
+VariableType Grammar::LexemeTypeToVariableType(LexemeType lt)
+{
+	switch(lt)
+	{
+	case LexemeType::kImmediateInteger:
+		return VariableType::kInt;
+	case LexemeType::kImmediateFloat:
+		return VariableType::kFloat;
+	case LexemeType::kTrue:
+	case LexemeType::kFalse:
+		return VariableType::kBool;
+	default:
+		ErrMessage::AbortMsg("Try to infer unknown variable type out of lexeme type");
+	}
+	return VariableType::kInt; //Workaround to shut the warning. This statement never is executed as an AbortMsg terminates the program
+}
 
 bool Grammar::IsAssignment(const std::string& to_check)
 {

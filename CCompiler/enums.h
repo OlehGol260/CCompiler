@@ -34,6 +34,13 @@ enum class VariableType
 	kBool,
 	kFloat,
 };
+
+static const std::map<VariableType, std::string> VariableTypeStr{
+	{VariableType::kInt, "int"},
+	{VariableType::kFloat, "float"},
+	{VariableType::kBool, "bool"},
+};
+
 enum class BracketType
 {
 	kParentheses,

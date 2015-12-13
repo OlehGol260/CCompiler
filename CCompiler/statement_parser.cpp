@@ -2,7 +2,7 @@
 
 #include "grammar.h"
 #include "lexeme.h"
-
+#include "lexeme_func.h"
 
 std::shared_ptr<Statement> StatementParser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 {
@@ -51,16 +51,22 @@ std::shared_ptr<LexemeInterface> StatementParser::InnerStatParse(std::shared_ptr
 			result_token = current_token;
 			if (curr_level == result_token->level() && Grammar::IsBinaryOperator(result_token->type()) && result_token->value() == *it_bin)
 			{
-				InnerStatParse(result_token, WhereAttachCh::kLeft, it_tok + 1, rend);
+				InnerStatParse(result_token, WhereAttachCh::kLeft, it_tok + 1, rend); // +1 - not include current token,
 				auto a = it_tok - 1;
-				InnerStatParse(result_token, WhereAttachCh::kRight, rbegin, it_tok);
+				InnerStatParse(result_token, WhereAttachCh::kRight, rbegin, it_tok); // condition it_tok != rend in the inner loop, doesn't require +1 here
 				found_needed_op = true;
  			}
 		}
 	}
 	if (!parent) { return result_token; }
 
+	if (Grammar::IsSqrt(result_token->type()))
+	{
+		auto result_token_func = std::static_pointer_cast<LexemeFunc>(result_token);
+		result_token_func->set_body(InnerStatParse(nullptr, WhereAttachCh::kUnknown, rbegin, rend - 1));
+	}
 	auto parent_ = std::static_pointer_cast<Lexeme>(parent);
+
 	if (side == WhereAttachCh::kLeft)
 	{
 		parent_->set_left(result_token);
@@ -74,10 +80,10 @@ std::shared_ptr<LexemeInterface> StatementParser::InnerStatParse(std::shared_ptr
 
 int StatementParser::GetLowestLevel(lexeme_interfaces_reverse_iter rbegin, lexeme_interfaces_reverse_iter rend)
 {
-	auto min_lvl = (*rbegin)->level();
+	auto min_lvl = 100000;
 	for (auto it = rbegin; it != rend ; ++it)
 	{
-		auto curr = (*it);
+		auto curr = *it;
 		if (!Grammar::IsBracket(curr->type()) && curr->level() < min_lvl)
 		{
 			min_lvl = curr->level();

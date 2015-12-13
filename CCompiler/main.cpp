@@ -5,18 +5,20 @@
 
 #include "utils.h"
 #include "parser.h"
-
+#include "enums.h"
 #include "variable.h"
 #include "evaluater.h"
 #include "compiler.h"
 #include "variable_factory.h"
+
 int main()
 {
-	auto a = 10.1 - 10;
+	
 	//
 	Compiler compiler;
+	compiler.Compile("int a = sqrt(10 + 6) + 4;");
 	//compiler.Compile("int a = 0; for (int i = 0; i < 10; i = i + 1) { a = 100; b = 200; for (int i = 0; i < 10; i = i + 1) { a = 100; b = 200;} a = 300;}");
-	compiler.Compile("int a; if (a > 5) { a = 10; } else {a = 15; } ");
+	//compiler.Compile("int a; if (a > 5) { a = 10; } else {a = 15; } ");
 //	Lexer lx;
 	//int a=0; while(a<10){int b=a_;}
 	//lx.GenerateLexems("a = 12*3+2;");

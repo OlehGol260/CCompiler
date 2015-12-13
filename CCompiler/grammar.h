@@ -12,6 +12,7 @@ public:
 	Grammar(const Grammar&) = delete;
 	Grammar& operator=(const Grammar&) = delete;
 
+	static VariableType LexemeTypeToVariableType(LexemeType);
 	template<typename T>
 	static bool IsOperator(const T& t)
 	{
