@@ -46,6 +46,12 @@
     <Filter Include="Source Files\core\parser\control_flow_parser">
       <UniqueIdentifier>{92ae3f8e-b236-46d1-adcc-eeb236bcdb97}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\executer">
+      <UniqueIdentifier>{91b501f5-84d0-45cf-9af2-5f380d75e109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\executer\Variable">
+      <UniqueIdentifier>{f07afc34-f950-4625-9694-ecea80909bb6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -60,9 +66,6 @@
     <ClCompile Include="parser.cpp">
       <Filter>Source Files\core\parser</Filter>
     </ClCompile>
-    <ClCompile Include="context_parser.cpp">
-      <Filter>Source Files\core\context</Filter>
-    </ClCompile>
     <ClCompile Include="compiler.cpp">
       <Filter>Source Files\core\compiler</Filter>
     </ClCompile>
@@ -74,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="reserved_word_parser.cpp">
       <Filter>Source Files\core\parser\control_flow_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="evaluater.cpp">
+      <Filter>Source Files\core\executer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -100,9 +106,6 @@
     </ClInclude>
     <ClInclude Include="parser.h">
       <Filter>Source Files\core\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="context_parser.h">
-      <Filter>Source Files\core\context</Filter>
     </ClInclude>
     <ClInclude Include="compiler.h">
       <Filter>Source Files\core\compiler</Filter>
@@ -134,11 +137,35 @@
     <ClInclude Include="lexeme_loop.h">
       <Filter>Source Files\core\lexem</Filter>
     </ClInclude>
-    <ClInclude Include="lexeme_print.h">
-      <Filter>Source Files\core\lexem</Filter>
-    </ClInclude>
     <ClInclude Include="reserved_word_parser.h">
       <Filter>Source Files\core\parser\control_flow_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="variable.h">
+      <Filter>Source Files\core\executer\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="evaluater.h">
+      <Filter>Source Files\core\executer</Filter>
+    </ClInclude>
+    <ClInclude Include="variable_factory.h">
+      <Filter>Source Files\core\executer\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="variable_int.h">
+      <Filter>Source Files\core\executer\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="variable_float.h">
+      <Filter>Source Files\core\executer\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="variable_bool.h">
+      <Filter>Source Files\core\executer\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="lexeme_func.h">
+      <Filter>Source Files\core\lexem</Filter>
+    </ClInclude>
+    <ClInclude Include="operations.h">
+      <Filter>Source Files\core\executer</Filter>
+    </ClInclude>
+    <ClInclude Include="operation_evaluater.h">
+      <Filter>Source Files\core\executer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

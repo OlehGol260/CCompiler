@@ -8,9 +8,9 @@
 #include "lexeme_loop.h"
 #include "lexeme_condition.h"
 #include "typedefs.h"
-#include "lexeme_print.h"
+#include "lexeme_func.h"
 
-void Lexer::GenerateLexems(const std::string& code)
+void Lexer::Parse(const std::string& code)
 {
 	std::stringstream ss(AddSpaces(code));
 	std::string token = "";
@@ -35,7 +35,8 @@ void Lexer::GenerateLexems(const std::string& code)
 				lexeme = std::make_shared<LexemeCondition>(type, token);
 				break;
 			case LT::kPrint:
-				lexeme = std::make_shared<LexemePrint>(type, token);
+			case LT::kSqrt:
+				lexeme = std::make_shared<LexemeFunc>(type, token);
 				break;
 			default:
 				lexeme = std::make_shared<Lexeme>(type, token);

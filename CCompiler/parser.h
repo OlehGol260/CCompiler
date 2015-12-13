@@ -12,6 +12,7 @@ public:
 	Parser() : main_context_(std::make_shared<Context>(0)) {}
 	~Parser() = default;
 
+	auto main_context() const noexcept { return main_context_; }
 	void Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems);
 private:
 	static bool IsVariableValid(const std::string& var_name);

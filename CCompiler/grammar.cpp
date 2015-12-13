@@ -33,6 +33,9 @@ const std::vector<std::string> Grammar::kBinaryOperators = {
 	"%",
 };
 const std::string Grammar::kDoubleQuote_ = "\"";
+const std::string Grammar::kFalse_ = "false";
+const std::string Grammar::kTrue_ = "true";
+const std::string Grammar::kSqrt_ = "sqrt";
 
 const std::string Grammar::kIf_ = "if";
 const std::string Grammar::kElse_ = "else";
@@ -44,10 +47,6 @@ const std::string Grammar::kPunctuator_ = ";";
 
 const std::string Grammar::kLogicalNot_ = "!";
 
-bool Grammar::IsReservedWord(const std::string& to_check)
-{
-	return IsInVector(to_check, kLoop_);
-}
 
 bool Grammar::IsAssignment(const std::string& to_check)
 {
@@ -130,11 +129,6 @@ bool Grammar::IsVariable(const LexemeType& t)
 	return t == LexemeType::kVar;
 }
 
-bool Grammar::IsLiteral(const LexemeType& t)
-{
-	return t == LexemeType::kLiteral;
-}
-
 bool Grammar::IsLoop(const LexemeType& t)
 {
 	return t == LexemeType::kLoop;
@@ -185,6 +179,21 @@ bool Grammar::IsElse(const std::string& str)
 	return str == kElse_;
 }
 
+bool Grammar::IsFalse(const std::string& str)
+{
+	return str == kFalse_;
+}
+
+bool Grammar::IsTrue(const std::string& str)
+{
+	return str == kTrue_;
+}
+
+bool Grammar::IsSqrt(const std::string& str)
+{
+	return str == kSqrt_;
+}
+
 bool Grammar::IsPrint(const std::string& str)
 {
 	return str == kPrint_;
@@ -193,6 +202,11 @@ bool Grammar::IsPrint(const std::string& str)
 bool Grammar::IsDoubleQuote(const LexemeType& t)
 {
 	return t == LexemeType::kDoubleQoute;
+}
+
+bool Grammar::IsSqrt(const LexemeType& t)
+{
+	return t == LexemeType::kSqrt;
 }
 
 bool Grammar::IsDoubleQuote(const std::string& to_check)
@@ -205,8 +219,21 @@ bool Grammar::IsPrint(const LexemeType& t)
 	return t == LexemeType::kPrint;
 }
 
+bool Grammar::IsFalse(const LexemeType& t)
+{
+	return t == LexemeType::kFalse;
+}
+
+bool Grammar::IsTrue(const LexemeType& t)
+{
+	return t == LexemeType::kTrue;
+}
+
 LexemeType Grammar::GetType(const std::string& str)
 {
+	if (IsSqrt(str)) { return LexemeType::kSqrt; }
+	if (IsTrue(str)) { return LexemeType::kTrue; }
+	if (IsFalse(str)) { return LexemeType::kFalse; }
 	if (IsVarType(str)) { return LexemeType::kVarType; }
 	if (IsAssignment(str)) { return LexemeType::kAssignment; }
 	if (IsBinaryOperator(str)) { return LexemeType::kBinaryOperator; }
@@ -215,7 +242,11 @@ LexemeType Grammar::GetType(const std::string& str)
 	if (IsOpenParenthesis(str)) { return LexemeType::kOpenParenthesis; }
 	if (IsCloseParenthesis(str)) { return LexemeType::kCloseParenthesis; }
 	if (IsPunctuator(str)) { return LexemeType::kPunctuator; }
-	if (utils::IsNumber(str)) { return LexemeType::kLiteral; }
+	if (utils::IsNumber(str))
+	{
+		return str.find(".") != std::string::npos ? LexemeType::kImmediateFloat : LexemeType::kImmediateInteger;
+
+	}
 	if (IsDoubleQuote(str)) { return LexemeType::kDoubleQoute; }
 	if (IsIf(str)) { return LexemeType::kIf; }
 	if (IsElse(str)) { return LexemeType::kElse; }

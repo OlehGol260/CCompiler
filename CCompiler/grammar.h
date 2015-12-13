@@ -32,7 +32,6 @@ public:
 		return std::find(vec.cbegin(), vec.cend(), t) != vec.cend();
 	}
 
-	static bool IsReservedWord(const std::string& to_check);
 	static bool IsAssignment(const std::string& to_check);
 	static bool IsPunctuator(const std::string& to_check);
 	static bool IsVarType(const std::string& to_check);
@@ -46,10 +45,14 @@ public:
 	static bool IsIf(const std::string& str);
 	static bool IsElse(const std::string& str);
 	static bool IsPrint(const std::string& str);
+	static bool IsFalse(const std::string& str);
+	static bool IsTrue(const std::string& str);
+	static bool IsSqrt(const std::string& str);
 
 
 
 	static bool IsDoubleQuote(const LexemeType& t);
+	static bool IsSqrt(const LexemeType& t);
 	static bool IsDoubleQuote(const std::string& to_check);
 	static bool IsBinaryOperator(const LexemeType& t);
 	static bool IsReservedWord(const LexemeType& t);
@@ -62,17 +65,21 @@ public:
 	static bool IsOpenParenthesis(const LexemeType& t);
 	static bool IsCloseParenthesis(const LexemeType& t);
 	static bool IsVariable(const LexemeType& t);
-	static bool IsLiteral(const LexemeType& t);
 	static bool IsLoop(const LexemeType& t);
 	static bool IsIf(const LexemeType& t);
 	static bool IsElse(const LexemeType& t);
 	static bool IsPrint(const LexemeType& t);
+	static bool IsFalse(const LexemeType& t);
+	static bool IsTrue(const LexemeType& t);
 	static LexemeType GetType(const std::string& to_check);
 
 	static auto& open_parenthesis() { return kOpenParenthesis_; }
 	static auto& close_parenthesis() { return kCloseParenthesis_; }
 	static auto& open_brace() { return kOpenBrace_; }
 	static auto& close_brace() { return kCloseBrace_; }
+	static auto& false_() { return kFalse_; }
+	static auto& true_() { return kTrue_; }
+	static auto& sqrt() { return kSqrt_; }
 
 	static auto& if_st() { return kIf_; }
 	static auto& else_st() { return kElse_; }
@@ -113,6 +120,10 @@ private:
 	static const std::string kPunctuator_;
 	static const std::string kLogicalNot_;
 	static const std::string kDoubleQuote_;
+	static const std::string kFalse_;
+	static const std::string kTrue_;
+	static const std::string kSqrt_;
+	
 };
 
 

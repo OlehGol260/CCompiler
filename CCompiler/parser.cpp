@@ -56,6 +56,26 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 
 		switch (state)
 		{
+		case LT::kSqrt:
+			if (next_token_type != LT::kOpenParenthesis)
+			{
+				is_next_token_invalid = true;
+			}
+			state = next_token_type;
+			break;
+		case LT::kFalse:
+		case LT::kTrue:
+			switch(next_token_type)
+			{
+			case LexemeType::kPunctuator:
+			case LexemeType::kBinaryOperator:
+			case LexemeType::kCloseParenthesis:
+				state = next_token_type;
+				break;
+			default:
+				is_next_token_invalid = true;
+			}
+			break;
 		case LT::kStringLiteral:
 			if (!Grammar::IsCloseParenthesis(next_token_type))
 			{
@@ -96,8 +116,12 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 			switch (next_token_type)
 			{
 			case LT::kVar:
-			case LT::kLiteral:
+			case LT::kSqrt:
+			case LT::kImmediateFloat:
+			case LT::kImmediateInteger:
 			case LT::kOpenParenthesis:
+			case LT::kTrue:
+			case LT::kFalse:
 				state = next_token_type;
 				break;
 			default:
@@ -113,8 +137,12 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 			switch (next_token_type)
 			{
 			case LT::kVar:
-			case LT::kLiteral:
+			case LT::kSqrt:
+			case LT::kImmediateFloat:
+			case LT::kImmediateInteger:
 			case LT::kOpenParenthesis:
+			case LT::kTrue:
+			case LT::kFalse:
 				state = next_token_type;
 				break;
 			default:
@@ -152,7 +180,8 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 			}
 			break;
 			///////////////////////////////////////////		
-		case LT::kLiteral:
+		case LT::kImmediateFloat:
+		case LT::kImmediateInteger:
 			switch (next_token_type)
 			{
 			case LT::kCloseParenthesis:
@@ -216,8 +245,12 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 					is_print = false;
 				}
 			case LT::kVar:
+			case LT::kSqrt:
+			case LT::kTrue:
+			case LT::kFalse:
 			case LT::kOpenParenthesis:
-			case LT::kLiteral:
+			case LT::kImmediateFloat:
+			case LT::kImmediateInteger:
 			case LT::kVarType:
 			case LT::kDoubleQoute:
 				state = next_token_type;

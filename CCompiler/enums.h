@@ -12,7 +12,8 @@ enum class LexemeType
 	kAssignment,
 	kVarType,
 	kVar,
-	kLiteral,
+	kImmediateInteger,
+	kImmediateFloat,
 	kOpenBrace,
 	kCloseBrace,
 	kOpenParenthesis,
@@ -22,8 +23,17 @@ enum class LexemeType
 	kVarDeclaration,
 	kDoubleQoute,
 	kStringLiteral,
+	kFalse,
+	kTrue,
+	kSqrt,
 };
 
+enum class VariableType
+{
+	kInt,
+	kBool,
+	kFloat,
+};
 enum class BracketType
 {
 	kParentheses,
@@ -47,7 +57,6 @@ static const std::map<LexemeType, std::string> LexemTypeNames{
 	{ LexemeType::kElse, "Else statement"},
 	{ LexemeType::kLoop, "Loop"},
 	{ LexemeType::kBinaryOperator, "Binary operator"},
-	{ LexemeType::kLiteral, "Literal" },
 	{ LexemeType::kOpenBrace, "Open Brace" },
 	{ LexemeType::kCloseBrace, "Close Brace" },
 	{ LexemeType::kOpenParenthesis, "Open parenthesis" },

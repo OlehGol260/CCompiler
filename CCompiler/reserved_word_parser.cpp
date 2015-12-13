@@ -3,7 +3,7 @@
 #include "grammar.h"
 #include "statement_parser.h"
 #include "lexeme_loop.h"
-#include "lexeme_print.h"
+#include "lexeme_func.h"
 #include <assert.h>
 #include "lexeme_condition.h"
 
@@ -93,7 +93,7 @@ std::shared_ptr<Statement> ReservedWordParser::ParsePrint(const std::vector<std:
 
 	assert(Grammar::IsPrint(lexems_front->type()));
 
-	auto print = std::static_pointer_cast<LexemePrint>(lexems_front);
+	auto print = std::static_pointer_cast<LexemeFunc>(lexems_front);
 
 	auto print_block = FindParenthesisedBlock(lexems.cbegin(), lexems.cend());
 	auto print_block_root = ParseParenthesisedBlock(print_block)->GetFirstRoot();

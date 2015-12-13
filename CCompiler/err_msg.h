@@ -33,4 +33,9 @@ public:
 	{
 		AbortMsg("Variable " + var_name + " containes prohibited symbols");
 	}
+
+	static void AbortUndeclaredVariable(const std::string& var_name)
+	{
+		AbortMsg("Variable " + var_name + " has not been declared");
+	}
 };

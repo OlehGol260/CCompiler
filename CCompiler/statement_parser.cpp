@@ -44,7 +44,6 @@ std::shared_ptr<LexemeInterface> StatementParser::InnerStatParse(std::shared_ptr
 
 	for (auto it_bin = Grammar::binary_operators().cbegin(); !found_needed_op && it_bin != Grammar::binary_operators().cend(); ++it_bin)
 	{
-
 		for (auto it_tok = rbegin; !found_needed_op && it_tok != rend; ++it_tok)
 		{
 			current_token = *it_tok;
@@ -75,7 +74,7 @@ std::shared_ptr<LexemeInterface> StatementParser::InnerStatParse(std::shared_ptr
 
 int StatementParser::GetLowestLevel(lexeme_interfaces_reverse_iter rbegin, lexeme_interfaces_reverse_iter rend)
 {
-	auto min_lvl = 10000;
+	auto min_lvl = (*rbegin)->level();
 	for (auto it = rbegin; it != rend ; ++it)
 	{
 		auto curr = (*it);
