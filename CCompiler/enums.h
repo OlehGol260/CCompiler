@@ -3,7 +3,8 @@
 #include <map>
 enum class LexemeType
 {
-	kLoop,
+	kFor,
+	kWhile,
 	kElse,
 	kIf,
 	kPrint,
@@ -59,10 +60,8 @@ static const std::map<LexemeType, std::string> LexemTypeNames{
 	{ LexemeType::kLogicalNot, "Logical not"},
 	{ LexemeType::kVarType, "Type_specifier"},
 	{ LexemeType::kVar, "Variable" },
-	{ LexemeType::kLoop, "Loop"},
 	{ LexemeType::kIf, "If statement"},
 	{ LexemeType::kElse, "Else statement"},
-	{ LexemeType::kLoop, "Loop"},
 	{ LexemeType::kBinaryOperator, "Binary operator"},
 	{ LexemeType::kOpenBrace, "Open Brace" },
 	{ LexemeType::kCloseBrace, "Close Brace" },

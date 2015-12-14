@@ -21,14 +21,15 @@ void Lexer::Parse(const std::string& code)
 		if (Grammar::IsDoubleQuote(type))
 		{
 			std::string str;
-			std::getline(ss, str, '"');
+			std::getline(ss, str, Grammar::double_qoute().at(0));
 			lexeme = std::make_shared<LexemeInterface>(LT::kStringLiteral, str);
 		}
 		else
 		{
 			switch (type)
 			{
-			case LT::kLoop:
+			case LT::kFor:
+			case LT::kWhile:
 				lexeme = std::make_shared<LexemeLoop>(type, token);
 				break;
 			case LT::kIf:
@@ -55,7 +56,7 @@ std::string Lexer::AddSpaces(const std::string& code)
 	for (size_t i = 0; i < code_size; i++)
 	{
 		auto str = std::string(1, code.at(i));
-
+	
 		if (!is_double_quoted_scope)
 		{
 			//check for operators which contatin 2 symbols : != and ==
@@ -92,4 +93,9 @@ void Lexer::print() const
 	{
 		std::cout << lexem->value() << "\t\t"  << LexemTypeNames.at(lexem->type()) << std::endl;
 	}
+}
+
+void Lexer::Clear()
+{
+	lexems_.clear();
 }

@@ -18,7 +18,7 @@ public:
 	~Evaluater() = default;
 
 	void Evaluate(const std::vector<std::shared_ptr<Statement>>& roots);
-
+	void Clear();
 private:
 	void AddVariable(std::shared_ptr<Variable> var, std::vector<std::shared_ptr<Variable>>& lcl_vars);
 	void ClearOutOfScopeVars(const std::vector<std::shared_ptr<Variable>>& lcl_vars);
@@ -31,7 +31,9 @@ private:
 
 	std::shared_ptr<Variable> EvaluateExpression(std::shared_ptr<LexemeInterface> root) const;
 
-
+	void EvaluateForLoop(std::shared_ptr<LexemeInterface> root);
+	void EvaluateWhileLoop(std::shared_ptr<LexemeInterface> root);
+	void EvaluateLoop(std::shared_ptr<LexemeInterface> root);
 	//TODO: ENORMOUSE WORKAROUND
 	template<class T>
 	void SetAndEvaluate(std::shared_ptr<Variable> var, std::shared_ptr<LexemeInterface> lexem) const
@@ -61,8 +63,9 @@ private:
 		}
 	}
 
+	void EvaluatePrint(std::shared_ptr<LexemeInterface> print_st) const;
 	void EvaluateBlock(const std::vector<std::shared_ptr<Statement>>& roots);
-
+	
 	void AddOperations();
 private:
 	std::vector<std::shared_ptr<Variable>> m_vars;

@@ -167,5 +167,8 @@
     <ClInclude Include="operation_evaluater.h">
       <Filter>Source Files\core\executer</Filter>
     </ClInclude>
+    <ClInclude Include="variable_str_traits.h">
+      <Filter>Source Files\core\executer\Variable</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

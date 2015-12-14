@@ -18,7 +18,8 @@ std::shared_ptr<Statement> ReservedWordParser::Parse(const std::vector<std::shar
 	case LT::kIf:
 		statement = ParseIfElse(lexems);
 		break;
-	case LT::kLoop:
+	case LT::kFor:
+	case LT::kWhile:
 		statement = ParseLoop(lexems);
 		break;
 	case LT::kPrint:

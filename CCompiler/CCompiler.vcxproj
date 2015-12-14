@@ -157,6 +157,7 @@
     <ClInclude Include="variable_factory.h" />
     <ClInclude Include="variable_float.h" />
     <ClInclude Include="variable_int.h" />
+    <ClInclude Include="variable_str_traits.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

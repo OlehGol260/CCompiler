@@ -49,7 +49,8 @@ public:
 	static bool IsFalse(const std::string& str);
 	static bool IsTrue(const std::string& str);
 	static bool IsSqrt(const std::string& str);
-
+	static bool IsFor(const std::string& str);
+	static bool IsWhile(const std::string& str);
 
 
 	static bool IsDoubleQuote(const LexemeType& t);
@@ -68,6 +69,9 @@ public:
 	static bool IsVariable(const LexemeType& t);
 	static bool IsLoop(const LexemeType& t);
 	static bool IsIf(const LexemeType& t);
+
+	static bool IsFor(const LexemeType& t);
+	static bool IsWhile(const LexemeType& t);
 	static bool IsElse(const LexemeType& t);
 	static bool IsPrint(const LexemeType& t);
 	static bool IsFalse(const LexemeType& t);
@@ -82,13 +86,13 @@ public:
 	static auto& true_() { return kTrue_; }
 	static auto& sqrt() { return kSqrt_; }
 
+	static auto& double_qoute() { return kDoubleQuote_; }
 	static auto& if_st() { return kIf_; }
 	static auto& else_st() { return kElse_; }
 	static auto& print() { return kPrint_; }
-	static auto& loop()
-	{
-		return kLoop_;
-	}
+	static auto& for_() { return kFor_; }
+	static auto& while_() { return kWhile_; }
+	
 	static auto& binary_operators()
 	{
 		return kBinaryOperators;
@@ -114,7 +118,9 @@ private:
 	static const std::string kIf_;
 	static const std::string kElse_;
 	static const std::string kPrint_;
-	static const std::vector<std::string> kLoop_;
+	static const std::string kFor_;
+	static const std::string kWhile_;
+	//static const std::vector<std::string> kLoop_;
 	static const std::vector<std::string> kBinaryOperators;
 	static const std::vector<std::string> kTypes_;
 	static const std::string kAssignment_;

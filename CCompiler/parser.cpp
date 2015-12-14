@@ -26,6 +26,7 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 	for (size_t i = 0; i < lexems_size; i++)
 	{
 		auto current_lexem = lexems.at(i);
+		auto a = current_lexem->value();
 		auto current_lexem_type = current_lexem->type();
 
 		if (i < lexems_size - 1)
@@ -43,7 +44,8 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 			switch (current_lexem_type)
 			{
 			case LT::kPrint:
-			case LT::kLoop:
+			case LT::kFor:
+			case LT::kWhile:
 			case LT::kIf:
 			case LT::kVarType:
 			case LT::kVar:
@@ -101,7 +103,8 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
 
 		case LT::kIf:
 			is_if_block = true; //break here is ommitted on purpose
-		case LT::kLoop:
+		case LT::kFor:
+		case LT::kWhile:
 			if (!Grammar::IsOpenParenthesis(next_token_type))
 			{
 				is_next_token_invalid = true;
@@ -314,4 +317,9 @@ bool Parser::IsVariableValid(const std::string& var_name)
 {
 	std::regex validater("^[a-zA-Z_][a-zA-Z0-9_]*$");
 	return std::regex_match(var_name, validater);
+}
+
+void Parser::Clear()
+{
+	main_context_ = nullptr;
 }

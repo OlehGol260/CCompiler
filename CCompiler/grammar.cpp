@@ -6,10 +6,10 @@ const std::string Grammar::kCloseBrace_ = "}";
 const std::string Grammar::kOpenParenthesis_ = "(";
 const std::string Grammar::kCloseParenthesis_ = ")";
 
-const std::vector<std::string> Grammar::kLoop_ = {
-	"for",
-	"while",
-};
+const std::string Grammar::kFor_ = "for";
+const std::string Grammar::kWhile_ = "while";
+
+
 
 const std::vector<std::string> Grammar::kTypes_ = {
 	"int",
@@ -98,7 +98,7 @@ bool Grammar::IsBinaryOperator(const LexemeType& t)
 
 bool Grammar::IsReservedWord(const LexemeType& t)
 {
-	return IsLoop(t) || IsPrint(t) || IsIf(t) || IsElse(t);
+	return IsFor(t) || IsWhile(t) || IsPrint(t) || IsIf(t) || IsElse(t);
 }
 
 bool Grammar::IsAssignment(const LexemeType& t)
@@ -148,12 +148,22 @@ bool Grammar::IsVariable(const LexemeType& t)
 
 bool Grammar::IsLoop(const LexemeType& t)
 {
-	return t == LexemeType::kLoop;
+	return IsFor(t) || IsWhile(t);
 }
 
 bool Grammar::IsIf(const LexemeType& t)
 {
 	return t == LexemeType::kIf;
+}
+
+bool Grammar::IsFor(const LexemeType& t)
+{
+	return t == LexemeType::kFor;
+}
+
+bool Grammar::IsWhile(const LexemeType& t)
+{
+	return t == LexemeType::kWhile;
 }
 
 bool Grammar::IsElse(const LexemeType& t)
@@ -183,7 +193,7 @@ bool Grammar::IsCloseParenthesis(const std::string& to_check)
 
 bool Grammar::IsLoop(const std::string& str)
 {
-	return IsInVector(str, kLoop_);
+	return IsFor(str) || IsWhile(str);
 }
 
 bool Grammar::IsIf(const std::string& str)
@@ -209,6 +219,16 @@ bool Grammar::IsTrue(const std::string& str)
 bool Grammar::IsSqrt(const std::string& str)
 {
 	return str == kSqrt_;
+}
+
+bool Grammar::IsFor(const std::string& str)
+{
+	return str == kFor_;
+}
+
+bool Grammar::IsWhile(const std::string& str)
+{
+	return str == kWhile_;
 }
 
 bool Grammar::IsPrint(const std::string& str)
@@ -267,7 +287,9 @@ LexemeType Grammar::GetType(const std::string& str)
 	if (IsDoubleQuote(str)) { return LexemeType::kDoubleQoute; }
 	if (IsIf(str)) { return LexemeType::kIf; }
 	if (IsElse(str)) { return LexemeType::kElse; }
-	if (IsLoop(str)) { return LexemeType::kLoop; }
+	if (IsFor(str)) { return LexemeType::kFor; }
+	if (IsWhile(str)) { return LexemeType::kWhile; }
+	
 	if (IsPrint(str)) { return LexemeType::kPrint; }
 	return LexemeType::kVar;
 }
