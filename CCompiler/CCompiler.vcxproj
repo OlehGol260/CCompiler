@@ -120,7 +120,6 @@
   <ItemGroup>
     <ClCompile Include="compiler.cpp" />
     <ClCompile Include="evaluater.cpp" />
-    <ClCompile Include="output.cpp" />
     <ClCompile Include="reserved_word_parser.cpp" />
     <ClCompile Include="grammar.cpp" />
     <ClCompile Include="lexer.cpp" />
@@ -146,13 +145,11 @@
     <ClInclude Include="lexeme_loop.h" />
     <ClInclude Include="lexeme_func.h" />
     <ClInclude Include="lexer.h" />
-    <ClInclude Include="output.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="statement.h" />
     <ClInclude Include="statement_parser.h" />
     <ClInclude Include="translator.h" />
     <ClInclude Include="typedefs.h" />
-    <ClInclude Include="type_name_traits.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="variable.h" />
     <ClInclude Include="variable_bool.h" />

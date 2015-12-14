@@ -153,7 +153,10 @@ std::shared_ptr<Context> ReservedWordParser::ParseCurlyBracedBlock(const std::ve
 			auto reserved_word_block = FindControlFlowStatement(it, body_lexems.cend());
 			body_context->AddStatement(ReservedWordParser::Parse(reserved_word_block));
 			statement_lexem_interfs.clear();
-			it += reserved_word_block.size();
+			auto a = body_lexems.cbegin() - it;
+			auto b = body_lexems.cend() - body_lexems.cbegin();
+			it += reserved_word_block.size() - 1; // WATCH OUT HERE
+			a = body_lexems.cbegin() - it;
 		}
 	}
 

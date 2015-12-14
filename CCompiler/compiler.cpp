@@ -11,7 +11,6 @@ void Compiler::Compile(const std::string& code)
 	t.Translate(m_parser_.main_context()->roots());
 	t.Print();
 	m_evaluater_.Evaluate(m_parser_.main_context()->roots());
-	m_evaluater_.Print();
 }
 
 void Compiler::CompileFile(const std::string& filepath)

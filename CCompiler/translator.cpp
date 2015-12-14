@@ -5,6 +5,7 @@
 #include "lexeme_condition.h"
 #include "grammar.h"
 #include <iostream>
+#include "lexeme_func.h"
 
 void Translator::Translate(std::vector<std::shared_ptr<Statement>> main_context)
 {
@@ -47,6 +48,7 @@ void Translator::Translate(std::vector<std::shared_ptr<Statement>> main_context)
 
 void Translator::TranslateIf(std::shared_ptr<LexemeInterface> li)
 {
+	assert(li && "Tried to translate an empty lexeme");
 	auto if_lexeme = std::static_pointer_cast<LexemeCondition>(li);
 
 	auto cond_lexeme = if_lexeme->conidition();
@@ -65,6 +67,12 @@ void Translator::TranslateVarDeclaration(std::shared_ptr<LexemeInterface> li)
 
 void Translator::TranslatePrint(std::shared_ptr<LexemeInterface> li)
 {
+	assert(li && "Tried to translate an empty lexeme");
+	auto print_func = std::static_pointer_cast<LexemeFunc>(li);
+	auto body = print_func->body();
+	assert(body && "Body of a print statement cannot be empty");
+	
+	ss_ << "Print " << (Grammar::IsVariable(body->type()) ? "value of variable " : "") << body->value();
 }
 
 void Translator::TranslateForLoop(std::shared_ptr<LexemeInterface> li)
@@ -73,6 +81,7 @@ void Translator::TranslateForLoop(std::shared_ptr<LexemeInterface> li)
 
 void Translator::TranslateWhileLoop(std::shared_ptr<LexemeInterface> li)
 {
+
 }
 
 void Translator::TranslateAssignment(std::shared_ptr<LexemeInterface> li)

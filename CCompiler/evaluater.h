@@ -6,7 +6,6 @@
 #include "context.h"
 #include "variable_factory.h"
 #include "operations.h"
-#include "output.h"
 class Evaluater
 {
 public:
@@ -34,7 +33,7 @@ private:
 
 	
 	template<class T>
-	void SetAndEvaluate(std::shared_ptr<Variable> var, std::shared_ptr<LexemeInterface> lexem)
+	void SetAndEvaluate(std::shared_ptr<Variable> var, std::shared_ptr<LexemeInterface> lexem) const
 	{
 		auto evaluated_result = EvaluateExpression(lexem);
 		auto dest_value = std::static_pointer_cast<T>(var);
@@ -43,21 +42,18 @@ private:
 		case VariableType::kInt:
 		{
 			auto int_result = std::static_pointer_cast<VariableInt>(evaluated_result);
-			m_output_.Assignement(var, int_result->value());
 			dest_value->set_value(int_result->value());
 		}
 		break;
 		case VariableType::kFloat:
 		{
 			auto float_result = std::static_pointer_cast<VariableFloat>(evaluated_result);
-			m_output_.Assignement(var, float_result->value());
 			dest_value->set_value(float_result->value());
 		}
 		break;
 		case VariableType::kBool:
 		{
 			auto bool_result = std::static_pointer_cast<VariableBool>(evaluated_result);
-			m_output_.Assignement(var, bool_result->value());
 			dest_value->set_value(bool_result->value());
 		}
 		break;
@@ -71,5 +67,4 @@ private:
 private:
 	std::vector<std::shared_ptr<Variable>> m_vars;
 	Operations m_operations_;
-	Output m_output_;
 };

@@ -22,7 +22,6 @@ void Evaluater::Evaluate(const std::vector<std::shared_ptr<Statement>>& root_sta
 void Evaluater::AddVariable(std::shared_ptr<Variable> var, std::vector<std::shared_ptr<Variable>>& lcl_vars)
 {
 	assert(var && "Try to add empty variable");
-	m_output_.VariableDeclaration(var->type(), var); 
 	m_vars.push_back(var);
 	lcl_vars.push_back(var);
 }
@@ -195,7 +194,6 @@ void Evaluater::EvaluatePrint(std::shared_ptr<LexemeInterface> print_st)
 		}
 	}
 	}
-	m_output_.PrintStatement(pt, msg);
 }
 
 void Evaluater::EvaluateBlock(const std::vector<std::shared_ptr<Statement>>& root_statements)
@@ -230,11 +228,6 @@ void Evaluater::EvaluateBlock(const std::vector<std::shared_ptr<Statement>>& roo
 		}
 	}
 	ClearOutOfScopeVars(variables_in_current_scope);
-}
-
-void Evaluater::Print() const
-{
-	std::cout << m_output_.Str() << std::endl;
 }
 
 void Evaluater::Clear()

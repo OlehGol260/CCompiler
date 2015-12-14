@@ -28,9 +28,6 @@
     <Filter Include="Source Files\core\parser">
       <UniqueIdentifier>{c68e0f06-6013-44ab-a19c-c36b0845dd5d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\output">
-      <UniqueIdentifier>{db73c6b1-0b21-4cd1-9846-d7e1f866be77}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\core\grammar">
       <UniqueIdentifier>{052a9108-9b98-42b3-b0a8-8f9c4c42da2a}</UniqueIdentifier>
     </Filter>
@@ -81,9 +78,6 @@
     <ClCompile Include="evaluater.cpp">
       <Filter>Source Files\core\executer</Filter>
     </ClCompile>
-    <ClCompile Include="output.cpp">
-      <Filter>Source Files\output</Filter>
-    </ClCompile>
     <ClCompile Include="translator.cpp">
       <Filter>Source Files\core\translator</Filter>
     </ClCompile>
@@ -94,12 +88,6 @@
     </ClInclude>
     <ClInclude Include="lexer.h">
       <Filter>Source Files\core\lexer</Filter>
-    </ClInclude>
-    <ClInclude Include="output.h">
-      <Filter>Source Files\output</Filter>
-    </ClInclude>
-    <ClInclude Include="type_name_traits.h">
-      <Filter>Source Files\output</Filter>
     </ClInclude>
     <ClInclude Include="enums.h">
       <Filter>Source Files\core\grammar</Filter>
