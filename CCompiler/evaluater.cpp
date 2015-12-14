@@ -49,7 +49,7 @@ std::shared_ptr<Variable> Evaluater::FindVariableByName(const std::string& var_n
 	return it != m_vars.cend() ? *it : nullptr;
 }
 
-void Evaluater::EvaluateAssignment(std::shared_ptr<LexemeInterface> assignment_root)
+void Evaluater::EvaluateAssignment(std::shared_ptr<LexemeInterface> assignment_root) const
 {
 	assert(assignment_root && "Empty assignment");
 	auto root_lexem = std::static_pointer_cast<Lexeme>(assignment_root);

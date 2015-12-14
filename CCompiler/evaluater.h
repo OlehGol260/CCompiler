@@ -22,7 +22,7 @@ private:
 
 	std::shared_ptr<Variable> EvaluateSqrt(std::shared_ptr<LexemeInterface> root) const;
 	std::shared_ptr<Variable> FindVariableByName(const std::string& var_name) const;
-	void EvaluateAssignment(std::shared_ptr<LexemeInterface> assignment_st) ;
+	void EvaluateAssignment(std::shared_ptr<LexemeInterface> assignment_st) const;
 	std::shared_ptr<Variable> EvaluateVarDecl(std::shared_ptr<LexemeInterface> assignment_st) const;
 	void EvaluateIf(std::shared_ptr<LexemeInterface> if_st);
 

@@ -1,11 +1,14 @@
 ﻿#include "translator.h"
 #include <assert.h>
+#include <fstream>
+#include <iostream>
+
 #include "typedefs.h"
-#include "err_msg.h"
 #include "lexeme_condition.h"
 #include "grammar.h"
-#include <iostream>
+
 #include "lexeme_func.h"
+#include "lexeme_loop.h"
 
 void Translator::Translate(std::vector<std::shared_ptr<Statement>> main_context)
 {
@@ -18,8 +21,7 @@ void Translator::Translate(std::vector<std::shared_ptr<Statement>> main_context)
 		st_root = st->root();
 		lexeme_type = st_root->type();
 
-		auto var_init = st->var_init();
-		if (var_init)
+		if (auto var_init = st->var_init())
 		{
 			TranslateVarDeclaration(var_init);
 		}
@@ -77,11 +79,38 @@ void Translator::TranslatePrint(std::shared_ptr<LexemeInterface> li)
 
 void Translator::TranslateForLoop(std::shared_ptr<LexemeInterface> li)
 {
+	assert(li && "Tried to translate an empty lexeme");
+	auto loop_it = std::static_pointer_cast<LexemeLoop>(li);
+	auto condition = loop_it->condition();
+	assert(condition && "condition cannot be empty");
+	auto condition_roots = condition->roots();
+	auto counter_st = condition_roots.at(0);
+	auto counter_lexem = counter_st->root();
+	ss_ << "For ";
+	if (Grammar::IsAssignment(counter_lexem->type()))
+	{
+		if (auto counter_init = counter_st->var_init())
+		{
+			TranslateVarDeclaration(counter_init);
+		}
+	}
+	TranslateAssignment(counter_lexem);
+
+	ss_ << " while true " << TranslateExpression(condition_roots.at(1)->root()) + " and at each step perform ";
+	TranslateAssignment(condition_roots.at(2)->root());
+	
+	TranslateIfNotEmpty(loop_it->body(), " DO ");
 }
 
 void Translator::TranslateWhileLoop(std::shared_ptr<LexemeInterface> li)
 {
+	assert(li && "Tried to translate an empty lexeme");
+	auto loop_it = std::static_pointer_cast<LexemeLoop>(li);
 
+	auto condition = loop_it->condition();
+	assert(condition && "condition cannot be empty");
+	std::string msg = "while true " + TranslateExpression(condition->roots().at(0)->root()) + " do";
+	TranslateIfNotEmpty(loop_it->body(), msg);
 }
 
 void Translator::TranslateAssignment(std::shared_ptr<LexemeInterface> li)
@@ -120,4 +149,14 @@ std::string Translator::TranslateExpression(std::shared_ptr<LexemeInterface> li)
 void Translator::Print() const
 {
 	std::cout << ss_.str() <<std::endl; 
+}
+
+void Translator::SaveToFile(const std::string& filepath) const
+{
+	std::ofstream file(filepath);
+	if (file.is_open())
+	{
+		file << ss_.rdbuf();
+		file.close();
+	}
 }

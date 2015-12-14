@@ -153,10 +153,7 @@ std::shared_ptr<Context> ReservedWordParser::ParseCurlyBracedBlock(const std::ve
 			auto reserved_word_block = FindControlFlowStatement(it, body_lexems.cend());
 			body_context->AddStatement(ReservedWordParser::Parse(reserved_word_block));
 			statement_lexem_interfs.clear();
-			auto a = body_lexems.cbegin() - it;
-			auto b = body_lexems.cend() - body_lexems.cbegin();
 			it += reserved_word_block.size() - 1; // WATCH OUT HERE
-			a = body_lexems.cbegin() - it;
 		}
 	}
 
@@ -195,6 +192,17 @@ std::vector<std::shared_ptr<LexemeInterface>> ReservedWordParser::FindParenthesi
 std::vector<std::shared_ptr<LexemeInterface>> ReservedWordParser::FindCurlyBracedBlock(lexeme_interfaces_iter begin, lexeme_interfaces_iter end)
 {
 	return FindBlock(begin, end, Grammar::open_brace(), Grammar::close_brace());
+}
+
+std::vector<std::shared_ptr<LexemeInterface>> ReservedWordParser::FindNearestPrint(lexeme_interfaces_iter begin, lexeme_interfaces_iter end)
+{
+	std::vector<std::shared_ptr<LexemeInterface>> result = {};
+
+	for (auto it = begin; it != end; ++it)
+	{
+		
+	}
+	return result;
 }
 
 std::vector<std::shared_ptr<LexemeInterface>> ReservedWordParser::FindBlock(lexeme_interfaces_iter begin, lexeme_interfaces_iter end, const std::string& open, const std::string& close)

@@ -10,6 +10,7 @@ public:
 	void Translate(std::vector<std::shared_ptr<Statement>> main_context);
 	std::string TranslateExpression(std::shared_ptr<LexemeInterface> li);
 	void Print() const;
+	void SaveToFile(const std::string& filepath) const;
 private:
 	void TranslateIf(std::shared_ptr<LexemeInterface> li);
 	void TranslateVarDeclaration(std::shared_ptr<LexemeInterface> li);

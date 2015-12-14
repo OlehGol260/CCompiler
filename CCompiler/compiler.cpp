@@ -1,15 +1,21 @@
 ﻿#include "compiler.h"
 #include <fstream>
 #include <streambuf>
-#include "translator.h"
+
 
 void Compiler::Compile(const std::string& code)
 {
 	m_lexer_.Parse(code);
 	m_parser_.Parse(m_lexer_.lexems());
-	Translator t;
-	t.Translate(m_parser_.main_context()->roots());
-	t.Print();
+	m_evaluater_.Evaluate(m_parser_.main_context()->roots());
+}
+
+void Compiler::Compile(const std::string& filepath, const std::string& code)
+{
+	m_lexer_.Parse(code);
+	m_parser_.Parse(m_lexer_.lexems());
+	m_translator_.Translate(m_parser_.main_context()->roots());
+	m_translator_.SaveToFile(filepath);
 	m_evaluater_.Evaluate(m_parser_.main_context()->roots());
 }
 
