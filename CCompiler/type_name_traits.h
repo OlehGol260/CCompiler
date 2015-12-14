@@ -2,7 +2,7 @@
 
 #include <typeinfo>
 #include <string>
-
+#include "variable_factory.h"
 template <typename T>
 struct TypeName
 {
@@ -13,7 +13,16 @@ struct TypeName
 };
 
 template <>
-struct TypeName<int>
+struct TypeName<VariableBool>
+{
+	static std::string Get()
+	{
+		return "bool";
+	}
+};
+
+template <>
+struct TypeName<VariableInt>
 {
 	static std::string Get()
 	{
@@ -22,7 +31,7 @@ struct TypeName<int>
 };
 
 template <>
-struct TypeName<float>
+struct TypeName<VariableFloat>
 {
 	static std::string Get()
 	{

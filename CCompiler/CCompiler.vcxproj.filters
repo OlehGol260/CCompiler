@@ -52,6 +52,9 @@
     <Filter Include="Source Files\core\executer\Variable">
       <UniqueIdentifier>{f07afc34-f950-4625-9694-ecea80909bb6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\translator">
+      <UniqueIdentifier>{ad1df653-c528-48cc-9eef-6c088cca11bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -69,9 +72,6 @@
     <ClCompile Include="compiler.cpp">
       <Filter>Source Files\core\compiler</Filter>
     </ClCompile>
-    <ClCompile Include="statement.cpp">
-      <Filter>Source Files\core\statement</Filter>
-    </ClCompile>
     <ClCompile Include="statement_parser.cpp">
       <Filter>Source Files\core\parser\statement_parser</Filter>
     </ClCompile>
@@ -80,6 +80,12 @@
     </ClCompile>
     <ClCompile Include="evaluater.cpp">
       <Filter>Source Files\core\executer</Filter>
+    </ClCompile>
+    <ClCompile Include="output.cpp">
+      <Filter>Source Files\output</Filter>
+    </ClCompile>
+    <ClCompile Include="translator.cpp">
+      <Filter>Source Files\core\translator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="variable_str_traits.h">
       <Filter>Source Files\core\executer\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="translator.h">
+      <Filter>Source Files\core\translator</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

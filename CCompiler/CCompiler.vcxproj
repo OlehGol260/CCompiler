@@ -120,13 +120,14 @@
   <ItemGroup>
     <ClCompile Include="compiler.cpp" />
     <ClCompile Include="evaluater.cpp" />
+    <ClCompile Include="output.cpp" />
     <ClCompile Include="reserved_word_parser.cpp" />
     <ClCompile Include="grammar.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="parser.cpp" />
-    <ClCompile Include="statement.cpp" />
     <ClCompile Include="statement_parser.cpp" />
+    <ClCompile Include="translator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bracket.h" />
@@ -149,6 +150,7 @@
     <ClInclude Include="parser.h" />
     <ClInclude Include="statement.h" />
     <ClInclude Include="statement_parser.h" />
+    <ClInclude Include="translator.h" />
     <ClInclude Include="typedefs.h" />
     <ClInclude Include="type_name_traits.h" />
     <ClInclude Include="utils.h" />

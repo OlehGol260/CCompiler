@@ -3,15 +3,20 @@
 #include <sstream>
 #include "type_name_traits.h"
 
-#define VNAME(x) #x
-
-namespace output
+class Output
 {
+public:
+	void VariableDeclaration(VariableType vt, std::shared_ptr<Variable> v);
+	std::string Str() const;
+
 	template<typename T>
-	inline std::string variable(const T& t)
+	void Assignement(std::shared_ptr<Variable> var, T value)
 	{
-		std::stringstream ss;
-		ss << "Variable " << VNAME(t) << "of type" << TypeName<T>::Get();
-		return ss.str();
+		assert(var);
+		ss_ << " Assign " << value << " to variable '" << var->name() << "'";
 	}
-}
+
+	void PrintStatement(PrintType pt, const std::string& message);
+private:
+	std::stringstream ss_;
+};

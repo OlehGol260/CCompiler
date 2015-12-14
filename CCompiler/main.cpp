@@ -1,20 +1,10 @@
-#include <iostream>
-#include <sstream>
-#include <string>
-#include "lexer.h"
-
-#include "utils.h"
-#include "parser.h"
-#include "enums.h"
-#include "variable.h"
-#include "evaluater.h"
 #include "compiler.h"
-#include "variable_factory.h"
 
 int main()
 {
 	Compiler compiler;
-	compiler.Compile(" int value = 2; int power = 4; int result = 1; for(int i = 0; i < power; i = i + 1 ) { result =result * value; } print(result);");
+	//compiler.Compile("int value = 2; int power = 4; int result = 1; for(int i = 0; i < power; i = i + 1 ) { result =result * value; } print(result);");
+	compiler.Compile("bool a = (10 + 25 *32) > (true || false); if (a) { a = false; } else { a = true; } ");
 
 	return 0;
 }

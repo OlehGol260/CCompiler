@@ -11,6 +11,8 @@
 #include "variable_str_traits.h"
 #include "lexeme_loop.h"
 
+#include "output.h"
+#include "grammar.h"
 
 void Evaluater::Evaluate(const std::vector<std::shared_ptr<Statement>>& root_statements)
 {
@@ -20,6 +22,7 @@ void Evaluater::Evaluate(const std::vector<std::shared_ptr<Statement>>& root_sta
 void Evaluater::AddVariable(std::shared_ptr<Variable> var, std::vector<std::shared_ptr<Variable>>& lcl_vars)
 {
 	assert(var && "Try to add empty variable");
+	m_output_.VariableDeclaration(var->type(), var); 
 	m_vars.push_back(var);
 	lcl_vars.push_back(var);
 }
@@ -47,7 +50,7 @@ std::shared_ptr<Variable> Evaluater::FindVariableByName(const std::string& var_n
 	return it != m_vars.cend() ? *it : nullptr;
 }
 
-void Evaluater::EvaluateAssignment(std::shared_ptr<LexemeInterface> assignment_root) const
+void Evaluater::EvaluateAssignment(std::shared_ptr<LexemeInterface> assignment_root)
 {
 	assert(assignment_root && "Empty assignment");
 	auto root_lexem = std::static_pointer_cast<Lexeme>(assignment_root);
@@ -73,7 +76,6 @@ std::shared_ptr<Variable> Evaluater::EvaluateVarDecl(std::shared_ptr<LexemeInter
 {
 	assert(var_decl && "Empty var declaration");
 	auto var_decl_lexeme = std::static_pointer_cast<Lexeme>(var_decl);
-	//auto a = VariableFactory::Generate(var_decl_lexeme->left()->value(),  var_decl_lexeme->right()->value());
 	return VariableFactory::Generate(var_decl_lexeme->left()->value(), var_decl_lexeme->right()->value());
 }
 
@@ -134,8 +136,7 @@ void Evaluater::EvaluateForLoop(std::shared_ptr<LexemeInterface> root)
 	auto counter_lexem = counter_st->root();
 	if (Grammar::IsAssignment(counter_lexem->type()))
 	{
-		auto counter_init = counter_st->var_init();
-		if (counter_init)
+		if (auto counter_init = counter_st->var_init())
 		{
 			AddVariable(EvaluateVarDecl(counter_init), variables_in_current_scope);
 		}
@@ -151,29 +152,35 @@ void Evaluater::EvaluateWhileLoop(std::shared_ptr<LexemeInterface> root)
 {
 	assert(root);
 	auto root_loop = std::static_pointer_cast<LexemeLoop>(root);
-
 	while (std::static_pointer_cast<VariableBool>(EvaluateExpression(root_loop->condition()->roots().at(0)->root()))->value())
 	{
 		EvaluateBlock(root_loop->body()->roots());
 	}
 }
 
-void Evaluater::EvaluatePrint(std::shared_ptr<LexemeInterface> print_st) const
+void Evaluater::EvaluatePrint(std::shared_ptr<LexemeInterface> print_st)
 {
 	assert(print_st && Grammar::IsPrint(print_st->type()) && "Tried to evaluate an empty expression");
 	auto print_lexeme = std::static_pointer_cast<LexemeFunc>(print_st);
 	auto body_lexeme = print_lexeme->body();
 	assert(body_lexeme && "Print doesn't have body");
 	auto str_lexeme = body_lexeme->value();
+
+	std::string msg = str_lexeme;
+	auto pt = PrintType::kVariable;
+
 	switch(body_lexeme->type())
 	{
 	case LT::kStringLiteral:
-		std::cout << str_lexeme;
+		pt = PrintType::kString;
+		std::cout << msg;
 		break;
 	case LT::kVar: 
 	{
 		auto var = FindVariableByName(str_lexeme);
+		
 		if (!var) { ErrMessage::AbortUndeclaredVariable(str_lexeme); }
+		msg = var->name();
 		switch (var->type())
 		{
 		case VariableType::kInt:
@@ -187,8 +194,8 @@ void Evaluater::EvaluatePrint(std::shared_ptr<LexemeInterface> print_st) const
 			break;
 		}
 	}
-		break;
 	}
+	m_output_.PrintStatement(pt, msg);
 }
 
 void Evaluater::EvaluateBlock(const std::vector<std::shared_ptr<Statement>>& root_statements)
@@ -220,11 +227,14 @@ void Evaluater::EvaluateBlock(const std::vector<std::shared_ptr<Statement>>& roo
 		case LT::kWhile:
 			EvaluateWhileLoop(root);
 			break;
-		default:
-			ErrMessage::AbortMsg("A statement cannot begin with " + root->value());
 		}
 	}
 	ClearOutOfScopeVars(variables_in_current_scope);
+}
+
+void Evaluater::Print() const
+{
+	std::cout << m_output_.Str() << std::endl;
 }
 
 void Evaluater::Clear()

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "variable.h"
-
+#include <string>
 class VariableInt : public Variable
 {
 public:

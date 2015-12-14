@@ -1,15 +1,28 @@
 #include "grammar.h"
+#include <assert.h>
 #include "utils.h"
 #include "err_msg.h"
 const std::string Grammar::kOpenBrace_ = "{";
 const std::string Grammar::kCloseBrace_ = "}";
 const std::string Grammar::kOpenParenthesis_ = "(";
 const std::string Grammar::kCloseParenthesis_ = ")";
-
 const std::string Grammar::kFor_ = "for";
 const std::string Grammar::kWhile_ = "while";
 
-
+const std::map <std::string, std::string> Grammar::kBinary_op_to_text_{
+	{"=", " assigned "},
+	{"||", " OR "},
+	{"&&", " AND "},
+	{"==", " equal "},
+	{"!=", " not equal "},
+	{">", " bigger "},
+	{"<", " less "},
+	{"+", " plus "},
+	{"-", " minus "},
+	{"*", " multiply "},
+	{"/", " divide "},
+	{"%", " reminder "},
+};
 
 const std::vector<std::string> Grammar::kTypes_ = {
 	"int",
@@ -36,17 +49,12 @@ const std::string Grammar::kDoubleQuote_ = "\"";
 const std::string Grammar::kFalse_ = "false";
 const std::string Grammar::kTrue_ = "true";
 const std::string Grammar::kSqrt_ = "sqrt";
-
 const std::string Grammar::kIf_ = "if";
 const std::string Grammar::kElse_ = "else";
 const std::string Grammar::kPrint_ = "print";
-
 const std::string Grammar::kAssignment_ = "=";
-
 const std::string Grammar::kPunctuator_ = ";";
-
 const std::string Grammar::kLogicalNot_ = "!";
-
 
 VariableType Grammar::LexemeTypeToVariableType(LexemeType lt)
 {
@@ -62,7 +70,13 @@ VariableType Grammar::LexemeTypeToVariableType(LexemeType lt)
 	default:
 		ErrMessage::AbortMsg("Try to infer unknown variable type out of lexeme type");
 	}
-	return VariableType::kInt; //Workaround to shut the warning. This statement never is executed as an AbortMsg terminates the program
+	return VariableType::kInt; //Workaround to shut the warning. This statement is never executed as an AbortMsg terminates the program
+}
+
+std::string Grammar::GetTextByOperation(const std::string& op)
+{
+	assert(IsBinaryOperator(op));
+	return kBinary_op_to_text_.at(op);
 }
 
 bool Grammar::IsAssignment(const std::string& to_check)
@@ -279,17 +293,14 @@ LexemeType Grammar::GetType(const std::string& str)
 	if (IsOpenParenthesis(str)) { return LexemeType::kOpenParenthesis; }
 	if (IsCloseParenthesis(str)) { return LexemeType::kCloseParenthesis; }
 	if (IsPunctuator(str)) { return LexemeType::kPunctuator; }
-	if (utils::IsNumber(str))
-	{
+	if (utils::IsNumber(str)) {
 		return str.find(".") != std::string::npos ? LexemeType::kImmediateFloat : LexemeType::kImmediateInteger;
-
 	}
 	if (IsDoubleQuote(str)) { return LexemeType::kDoubleQoute; }
 	if (IsIf(str)) { return LexemeType::kIf; }
 	if (IsElse(str)) { return LexemeType::kElse; }
 	if (IsFor(str)) { return LexemeType::kFor; }
 	if (IsWhile(str)) { return LexemeType::kWhile; }
-	
 	if (IsPrint(str)) { return LexemeType::kPrint; }
 	return LexemeType::kVar;
 }

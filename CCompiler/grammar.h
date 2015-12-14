@@ -33,6 +33,7 @@ public:
 		return std::find(vec.cbegin(), vec.cend(), t) != vec.cend();
 	}
 
+	static std::string GetTextByOperation(const std::string& op);
 	static bool IsAssignment(const std::string& to_check);
 	static bool IsPunctuator(const std::string& to_check);
 	static bool IsVarType(const std::string& to_check);
@@ -120,7 +121,6 @@ private:
 	static const std::string kPrint_;
 	static const std::string kFor_;
 	static const std::string kWhile_;
-	//static const std::vector<std::string> kLoop_;
 	static const std::vector<std::string> kBinaryOperators;
 	static const std::vector<std::string> kTypes_;
 	static const std::string kAssignment_;
@@ -131,6 +131,7 @@ private:
 	static const std::string kTrue_;
 	static const std::string kSqrt_;
 	
+	static const std::map <std::string, std::string> kBinary_op_to_text_;
 };
 
 

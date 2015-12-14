@@ -29,6 +29,11 @@ enum class LexemeType
 	kSqrt,
 };
 
+enum class PrintType
+{
+	kVariable,
+	kString
+};
 enum class VariableType
 {
 	kInt,
@@ -56,6 +61,37 @@ enum class WhereAttachCh
 };
 
 static const std::map<LexemeType, std::string> LexemTypeNames{
+	//{ LexemeType::kFor, },
+	//{ LexemeType::kWhile, },
+	//{ LexemeType::kElse, },
+	//{ LexemeType::kIf, },
+	//{ LexemeType::kPrint, },
+	//{ LexemeType::kBinaryOperator, },
+	//{ LexemeType::kPunctuator, },
+	//{ LexemeType::kAssignment, },
+	//{ LexemeType::kVarType, },
+	//{ LexemeType::kVar, },
+	//{ LexemeType::kImmediateInteger, },
+	//{ LexemeType::kImmediateFloat, },
+	//{ LexemeType::kOpenBrace, },
+	//{ LexemeType::kCloseBrace, },
+	//{ LexemeType::kOpenParenthesis, },
+	//{ LexemeType::kCloseParenthesis, },
+	//{ LexemeType::kUnknown, },
+	//{ LexemeType::kLogicalNot, },
+	//{ LexemeType::kVarDeclaration, },
+	//{ LexemeType::kDoubleQoute, "Double quote" },
+	//{ LexemeType::kStringLiteral, },
+	//{ LexemeType::kFalse, },
+	//{ LexemeType::kTrue, },
+	//{ LexemeType::kSqrt, },
+
+
+
+
+
+
+
 	{ LexemeType::kDoubleQoute, "Double quote"},
 	{ LexemeType::kLogicalNot, "Logical not"},
 	{ LexemeType::kVarType, "Type_specifier"},

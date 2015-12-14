@@ -10,7 +10,6 @@ public:
 	explicit Statement(std::shared_ptr<LexemeInterface> lexem) : root_(lexem), punctuator_(nullptr) {}
 	~Statement() = default;
 
-	void Print() const;
 
 	bool HasPunctuator() const noexcept { return punctuator_ != nullptr; }
 	auto punctuator() const noexcept { return punctuator_; }
@@ -21,8 +20,7 @@ public:
 
 	void set_var_init(std::shared_ptr<Lexeme> i) { var_init_ = i; }
 	auto var_init() const noexcept { return var_init_; }
-private:
-	void InnerPrint(std::shared_ptr<LexemeInterface> lexem) const;
+
 private:
 	std::shared_ptr<LexemeInterface> root_;
 

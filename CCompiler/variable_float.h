@@ -1,7 +1,7 @@
 #pragma once
 
 #include "variable.h"
-
+#include <string>
 class VariableFloat : public Variable
 {
 public:
