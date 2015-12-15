@@ -2,6 +2,10 @@
 
 #include "variable.h"
 #include <string>
+
+/*!
+	Holds floating point number
+*/
 class VariableFloat : public Variable
 {
 public:

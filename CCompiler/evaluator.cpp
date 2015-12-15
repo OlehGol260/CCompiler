@@ -176,9 +176,7 @@ void Evaluator::EvaluatePrint(std::shared_ptr<LexemeInterface> print_st)
 	case LT::kVar: 
 	{
 		auto var = FindVariableByName(str_lexeme);
-		
 		if (!var) { ErrMessage::AbortUndeclaredVariable(str_lexeme); }
-		msg = var->name();
 		switch (var->type())
 		{
 		case VariableType::kInt:

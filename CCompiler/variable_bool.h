@@ -1,6 +1,9 @@
 #pragma once
 #include "variable.h"
 
+/*!
+	Stores boolean variable
+*/
 class VariableBool : public Variable
 {
 public:

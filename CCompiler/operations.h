@@ -7,14 +7,28 @@
 #include "lexeme.h"
 #include "err_msg.h"
 
-
+/*!
+	Class holds operations which can be performed over given types and operation
+*/
 class Operations
 {
 public:
+	/*!	
+		Add new operation to m_operations_
+		\param oei new operation
+	*/
 	void Register(std::shared_ptr<OperationEvaluatorInterface> oei)
 	{
 		m_operations_.push_back(oei);
 	}
+
+	/*!
+		Evaluates an expression over given types and operation
+		If needed operation cannot be found, a corresponding error message will be shown and the program terminates
+		\param operation sign of operation
+		\param vars vector of variables. It can be one operation(sqrt) or two(any binary operation)
+		\return anonymous variable which holds the result of evaluation
+	*/
 	std::shared_ptr<Variable> Evaluate(const std::string& operation, const std::vector < std::shared_ptr<Variable>>& vars) const
 	{
 		std::vector<VariableType> var_types;
@@ -31,5 +45,5 @@ public:
 		return (*found)->Evaluate(vars);
 	}
 private:
-	std::vector<std::shared_ptr<OperationEvaluatorInterface>> m_operations_;
+	std::vector<std::shared_ptr<OperationEvaluatorInterface>> m_operations_; /*!< operations which can be performed over given types and operation*/
 };

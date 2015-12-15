@@ -5,6 +5,11 @@
 
 #include "variable_factory.h"
 
+/*!
+	Type traits for getting string representation of variable value 
+	According to passed type the appropriate conversions will be done and corresponding
+	value will return
+*/
 template<class T>
 struct VariableStrTraits
 {

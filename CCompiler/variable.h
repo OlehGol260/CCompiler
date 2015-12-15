@@ -1,6 +1,9 @@
 ﻿#pragma once
 #include "enums.h"
 
+/*!
+	Base class for variables. Holds variable type and its name.
+*/
 class Variable
 {
 public:
@@ -10,8 +13,8 @@ public:
 	auto type() const noexcept { return m_var_type_; }
 	auto name() const noexcept { return m_name_; }
 private:
-	const VariableType m_var_type_;
-	const std::string m_name_;
+	const VariableType m_var_type_; /*!< variable type*/
+	const std::string m_name_; /*!< variable name*/
 };
 
 

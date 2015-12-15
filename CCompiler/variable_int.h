@@ -2,6 +2,10 @@
 
 #include "variable.h"
 #include <string>
+
+/*!
+	Holds integer number
+*/
 class VariableInt : public Variable
 {
 public:
