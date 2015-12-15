@@ -302,6 +302,10 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems) 
 
 		if (state == LT::kUnknown && !lexems_block.empty())
 		{
+			if (open_brace_count)
+			{
+				ErrMessage::AbortInvalidNumberBrackets(BracketType::kBraces);
+			}
 			auto st = Grammar::IsReservedWord(lexems_block.front()->type()) ?
 				ReservedWordParser::Parse(lexems_block) :
 				StatementParser::Parse(lexems_block);
