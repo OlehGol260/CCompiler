@@ -3,7 +3,10 @@
 
 #include "lexeme_interface.h"
 
-
+/*
+	Contains if/else statement
+	If 'if' doesn't have 'else' statement, else_body_ will be nullptr
+*/
 class LexemeCondition : public LexemeInterface
 {
 public:
@@ -20,8 +23,8 @@ public:
 	void set_if_body(std::shared_ptr<Context> if_body) { if_body_ = if_body; }
 	void set_else_body(std::shared_ptr<Context> else_body) { else_body_ = else_body; }
 private:
-	std::shared_ptr<Statement> condition_;
-	std::shared_ptr<Context> if_body_;
-	std::shared_ptr<Context> else_body_;
+	std::shared_ptr<Statement> condition_; /*!< logical condition. If evaluates to true, if_body_ will be executed, else_body_ otherwise */
+	std::shared_ptr<Context> if_body_; /*!< curly braced block which will be executed if condition_ is true*/
+	std::shared_ptr<Context> else_body_; /*!< curly braced block which will be executed if condition_ is false*/
 
 };

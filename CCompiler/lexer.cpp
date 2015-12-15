@@ -94,8 +94,3 @@ void Lexer::print() const
 		std::cout << lexem->value() << "\t\t"  << LexemTypeNames.at(lexem->type()) << std::endl;
 	}
 }
-
-void Lexer::Clear()
-{
-	lexems_.clear();
-}

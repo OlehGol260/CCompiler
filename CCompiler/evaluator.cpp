@@ -229,11 +229,6 @@ void Evaluator::EvaluateBlock(const std::vector<std::shared_ptr<Statement>>& roo
 	ClearOutOfScopeVars(variables_in_current_scope);
 }
 
-void Evaluator::Clear()
-{
-	m_vars.clear();
-}
-
 void Evaluator::AddOperations()
 {
 	// INT + INT

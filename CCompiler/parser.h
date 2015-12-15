@@ -37,9 +37,13 @@ private:
 
 	/*
 		Check variable validity using special regular expression
+
+		@param var_name string representation of variable name
+
+		@return true if valid, false - otherwise
 	*/
 	static bool IsVariableValid(const std::string& var_name);
 	
 private:
-	std::shared_ptr<Context> main_context_;
+	std::shared_ptr<Context> main_context_; /*!< holds all the root nodes of the original code*/
 };

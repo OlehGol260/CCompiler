@@ -2,6 +2,9 @@
 #include "lexeme_interface.h"
 #include <memory>
 
+/*
+	Holds info about sqrt and print lexemes
+*/
 class LexemeFunc : public LexemeInterface
 {
 public:
@@ -14,5 +17,5 @@ public:
 
 	void set_body(std::shared_ptr<LexemeInterface> body) { body_ = body; }
 private:
-	std::shared_ptr<LexemeInterface> body_;
+	std::shared_ptr<LexemeInterface> body_; /*!< body of the function*/
 };

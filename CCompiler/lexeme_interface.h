@@ -1,6 +1,9 @@
 #pragma once
 #include "enums.h"
 
+/* 
+	Holds common info about a lexeme - its type, string value and level
+*/
 class LexemeInterface
 {
 public:
@@ -17,7 +20,7 @@ public:
 	void set_value(const std::string& code) { value_ = code; }
 	void set_level(int level) { level_ = level; }
 private:
-	LexemeType type_;
-	std::string value_;
-	int level_;
+	LexemeType type_; /*!< type of the lexeme */
+	std::string value_; /*!< name of the underlying element*/
+	int level_; /*!< Used in parentheses precedence. Has no effect in curly braced block*/
 };

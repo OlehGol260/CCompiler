@@ -318,8 +318,3 @@ bool Parser::IsVariableValid(const std::string& var_name)
 	std::regex validater("^[a-zA-Z_][a-zA-Z0-9_]*$");
 	return std::regex_match(var_name, validater);
 }
-
-void Parser::Clear()
-{
-	main_context_ = nullptr;
-}

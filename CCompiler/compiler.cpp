@@ -24,11 +24,3 @@ void Compiler::CompileFile(const std::string& filepath)
 	buffer << t.rdbuf();
 	Compile(buffer.str());
 }
-
-void Compiler::Clear()
-{
-	m_lexer_.Clear();
-	m_parser_.Clear();
-	m_evaluater_.Clear();
-	m_translator_.Clear();
-}

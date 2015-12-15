@@ -15,7 +15,6 @@ public:
 	~Evaluator() = default;
 
 	void Evaluate(const std::vector<std::shared_ptr<Statement>>& roots);
-	void Clear();
 private:
 	void AddVariable(std::shared_ptr<Variable> var, std::vector<std::shared_ptr<Variable>>& lcl_vars);
 	void ClearOutOfScopeVars(const std::vector<std::shared_ptr<Variable>>& lcl_vars);
