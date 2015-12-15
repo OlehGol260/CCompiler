@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "lexer.h"
 #include "parser.h"
-#include "evaluater.h"
+#include "evaluator.h"
 #include "translator.h"
 class Compiler
 {
@@ -18,6 +18,6 @@ private:
 private:
 	Lexer m_lexer_;
 	Parser m_parser_;
-	Evaluater m_evaluater_;
+	Evaluator m_evaluater_;
 	Translator m_translator_;
 };

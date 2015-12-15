@@ -1,19 +1,19 @@
 ﻿#pragma once
 #include <vector>
 #include <memory>
-#include "variable.h"
 
+#include "variable.h"
 #include "context.h"
 #include "variable_factory.h"
 #include "operations.h"
-class Evaluater
+
+class Evaluator
 {
 public:
-	Evaluater() { this->AddOperations(); }
+	Evaluator() { this->AddOperations(); }
 
-	~Evaluater() = default;
+	~Evaluator() = default;
 
-	void Print() const;
 	void Evaluate(const std::vector<std::shared_ptr<Statement>>& roots);
 	void Clear();
 private:

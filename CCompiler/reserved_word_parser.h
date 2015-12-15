@@ -23,7 +23,7 @@ private:
 
 	static std::shared_ptr<Context> ParseCurlyBracedBlock(const std::vector<std::shared_ptr<LexemeInterface>>& body_lexems);
 
-	static std::vector<std::shared_ptr<LexemeInterface>> FindControlFlowStatement(lexeme_interfaces_iter begin, lexeme_interfaces_iter end);
+	static std::vector<std::shared_ptr<LexemeInterface>> FindReservedWordBlock(lexeme_interfaces_iter begin, lexeme_interfaces_iter end);
 
 	static std::vector<std::shared_ptr<LexemeInterface>> FindParenthesisedBlock(lexeme_interfaces_iter begin, lexeme_interfaces_iter end);
 

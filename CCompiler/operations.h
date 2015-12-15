@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
-#include "operation_evaluater.h"
+#include "operation_evaluator.h"
 #include "lexeme.h"
 #include "err_msg.h"
 class Operations

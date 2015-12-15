@@ -21,7 +21,7 @@ void Translator::Translate(std::vector<std::shared_ptr<Statement>> main_context)
 		st_root = st->root();
 		lexeme_type = st_root->type();
 
-		if (auto var_init = st->var_init())
+		if (auto var_init = st->var_decl())
 		{
 			TranslateVarDeclaration(var_init);
 		}
@@ -29,7 +29,7 @@ void Translator::Translate(std::vector<std::shared_ptr<Statement>> main_context)
 		switch (lexeme_type)
 		{
 		case LT::kIf:
-			TranslateIf(st_root);
+			TranslateIfElse(st_root);
 			break;
 		case LT::kAssignment:
 			TranslateAssignment(st_root);
@@ -48,7 +48,7 @@ void Translator::Translate(std::vector<std::shared_ptr<Statement>> main_context)
 	}
 }
 
-void Translator::TranslateIf(std::shared_ptr<LexemeInterface> li)
+void Translator::TranslateIfElse(std::shared_ptr<LexemeInterface> li)
 {
 	assert(li && "Tried to translate an empty lexeme");
 	auto if_lexeme = std::static_pointer_cast<LexemeCondition>(li);
@@ -84,12 +84,13 @@ void Translator::TranslateForLoop(std::shared_ptr<LexemeInterface> li)
 	auto condition = loop_it->condition();
 	assert(condition && "condition cannot be empty");
 	auto condition_roots = condition->roots();
+	assert(condition_roots.size() == 3 && "For loop must have 3 parameters");
 	auto counter_st = condition_roots.at(0);
 	auto counter_lexem = counter_st->root();
 	ss_ << "For ";
 	if (Grammar::IsAssignment(counter_lexem->type()))
 	{
-		if (auto counter_init = counter_st->var_init())
+		if (auto counter_init = counter_st->var_decl())
 		{
 			TranslateVarDeclaration(counter_init);
 		}
@@ -143,12 +144,23 @@ std::string Translator::TranslateExpression(std::shared_ptr<LexemeInterface> li)
 	{
 		return "variable " + li_value;
 	}
+	if (Grammar::IsSqrt(li_type))
+	{
+		auto sqrt_body = std::static_pointer_cast<LexemeFunc>(li);
+		return " square root of " + TranslateExpression(sqrt_body->body());
+	}
 	return li_value;
 }
 
 void Translator::Print() const
 {
 	std::cout << ss_.str() <<std::endl; 
+}
+
+void Translator::Clear()
+{
+	ss_.str(std::string());
+	ss_.clear();
 }
 
 void Translator::SaveToFile(const std::string& filepath) const

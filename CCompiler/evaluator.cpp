@@ -1,32 +1,31 @@
-﻿#include "evaluater.h"
+﻿#include "evaluator.h"
 
 #include <algorithm>
+#include <iostream>
 #include <assert.h>
+
 #include "typedefs.h"
 #include "lexeme_condition.h"
 #include "variable_factory.h"
 #include "err_msg.h"
 #include "lexeme_func.h"
-#include <iostream>
 #include "variable_str_traits.h"
 #include "lexeme_loop.h"
-
-#include "output.h"
 #include "grammar.h"
 
-void Evaluater::Evaluate(const std::vector<std::shared_ptr<Statement>>& root_statements)
+void Evaluator::Evaluate(const std::vector<std::shared_ptr<Statement>>& root_statements)
 {
 	EvaluateBlock(root_statements);
 }
 
-void Evaluater::AddVariable(std::shared_ptr<Variable> var, std::vector<std::shared_ptr<Variable>>& lcl_vars)
+void Evaluator::AddVariable(std::shared_ptr<Variable> var, std::vector<std::shared_ptr<Variable>>& lcl_vars)
 {
 	assert(var && "Try to add empty variable");
 	m_vars.push_back(var);
 	lcl_vars.push_back(var);
 }
 
-void Evaluater::ClearOutOfScopeVars(const std::vector<std::shared_ptr<Variable>>& lcl_vars)
+void Evaluator::ClearOutOfScopeVars(const std::vector<std::shared_ptr<Variable>>& lcl_vars)
 {
 	for (auto lcl_it = lcl_vars.begin(); lcl_it != lcl_vars.end(); ++lcl_it)
 	{
@@ -34,13 +33,13 @@ void Evaluater::ClearOutOfScopeVars(const std::vector<std::shared_ptr<Variable>>
 	}
 }
 
-std::shared_ptr<Variable> Evaluater::EvaluateSqrt(std::shared_ptr<LexemeInterface> root) const
+std::shared_ptr<Variable> Evaluator::EvaluateSqrt(std::shared_ptr<LexemeInterface> root) const
 {
 	auto root_func = std::static_pointer_cast<LexemeFunc>(root);
 	return m_operations_.Evaluate(root->value(), std::vector<std::shared_ptr<Variable>>{EvaluateExpression(root_func->body())});
 }
 
-std::shared_ptr<Variable> Evaluater::FindVariableByName(const std::string& var_name) const
+std::shared_ptr<Variable> Evaluator::FindVariableByName(const std::string& var_name) const
 {
 	auto it = std::find_if(m_vars.cbegin(), m_vars.cend(), [var_name](std::shared_ptr<Variable> var)
 	{
@@ -49,7 +48,7 @@ std::shared_ptr<Variable> Evaluater::FindVariableByName(const std::string& var_n
 	return it != m_vars.cend() ? *it : nullptr;
 }
 
-void Evaluater::EvaluateAssignment(std::shared_ptr<LexemeInterface> assignment_root) const
+void Evaluator::EvaluateAssignment(std::shared_ptr<LexemeInterface> assignment_root) const
 {
 	assert(assignment_root && "Empty assignment");
 	auto root_lexem = std::static_pointer_cast<Lexeme>(assignment_root);
@@ -71,14 +70,14 @@ void Evaluater::EvaluateAssignment(std::shared_ptr<LexemeInterface> assignment_r
 	}
 }
 
-std::shared_ptr<Variable> Evaluater::EvaluateVarDecl(std::shared_ptr<LexemeInterface> var_decl) const
+std::shared_ptr<Variable> Evaluator::EvaluateVarDecl(std::shared_ptr<LexemeInterface> var_decl) const
 {
 	assert(var_decl && "Empty var declaration");
 	auto var_decl_lexeme = std::static_pointer_cast<Lexeme>(var_decl);
 	return VariableFactory::Generate(var_decl_lexeme->left()->value(), var_decl_lexeme->right()->value());
 }
 
-void Evaluater::EvaluateIf(std::shared_ptr<LexemeInterface> if_st)
+void Evaluator::EvaluateIf(std::shared_ptr<LexemeInterface> if_st)
 {
 	auto if_lexem = std::static_pointer_cast<LexemeCondition>(if_st);
 
@@ -95,7 +94,7 @@ void Evaluater::EvaluateIf(std::shared_ptr<LexemeInterface> if_st)
 	}
 }
 
-std::shared_ptr<Variable> Evaluater::EvaluateExpression(std::shared_ptr<LexemeInterface> root) const
+std::shared_ptr<Variable> Evaluator::EvaluateExpression(std::shared_ptr<LexemeInterface> root) const
 {
 	assert(root && "Tried to evaluate empty expression");
 	auto root_lexeme = std::static_pointer_cast<Lexeme>(root);
@@ -125,7 +124,7 @@ std::shared_ptr<Variable> Evaluater::EvaluateExpression(std::shared_ptr<LexemeIn
 	return VariableFactory::GenerateAnonym(Grammar::LexemeTypeToVariableType(root_type), root_value);
 }
 
-void Evaluater::EvaluateForLoop(std::shared_ptr<LexemeInterface> root)
+void Evaluator::EvaluateForLoop(std::shared_ptr<LexemeInterface> root)
 {
 	assert(root);
 	std::vector<std::shared_ptr<Variable>> variables_in_current_scope;
@@ -135,7 +134,7 @@ void Evaluater::EvaluateForLoop(std::shared_ptr<LexemeInterface> root)
 	auto counter_lexem = counter_st->root();
 	if (Grammar::IsAssignment(counter_lexem->type()))
 	{
-		if (auto counter_init = counter_st->var_init())
+		if (auto counter_init = counter_st->var_decl())
 		{
 			AddVariable(EvaluateVarDecl(counter_init), variables_in_current_scope);
 		}
@@ -147,7 +146,7 @@ void Evaluater::EvaluateForLoop(std::shared_ptr<LexemeInterface> root)
 	ClearOutOfScopeVars(variables_in_current_scope);
 }
 
-void Evaluater::EvaluateWhileLoop(std::shared_ptr<LexemeInterface> root)
+void Evaluator::EvaluateWhileLoop(std::shared_ptr<LexemeInterface> root)
 {
 	assert(root);
 	auto root_loop = std::static_pointer_cast<LexemeLoop>(root);
@@ -157,7 +156,7 @@ void Evaluater::EvaluateWhileLoop(std::shared_ptr<LexemeInterface> root)
 	}
 }
 
-void Evaluater::EvaluatePrint(std::shared_ptr<LexemeInterface> print_st)
+void Evaluator::EvaluatePrint(std::shared_ptr<LexemeInterface> print_st)
 {
 	assert(print_st && Grammar::IsPrint(print_st->type()) && "Tried to evaluate an empty expression");
 	auto print_lexeme = std::static_pointer_cast<LexemeFunc>(print_st);
@@ -196,7 +195,7 @@ void Evaluater::EvaluatePrint(std::shared_ptr<LexemeInterface> print_st)
 	}
 }
 
-void Evaluater::EvaluateBlock(const std::vector<std::shared_ptr<Statement>>& root_statements)
+void Evaluator::EvaluateBlock(const std::vector<std::shared_ptr<Statement>>& root_statements)
 {
 	assert(!root_statements.empty() && "There is nothing to evaluate");
 	std::vector<std::shared_ptr<Variable>> variables_in_current_scope;
@@ -204,9 +203,9 @@ void Evaluater::EvaluateBlock(const std::vector<std::shared_ptr<Statement>>& roo
 	for (auto root_statement : root_statements)
 	{
 		root = root_statement->root();
-		if (root_statement->var_init())
+		if (root_statement->var_decl())
 		{
-			AddVariable(EvaluateVarDecl(root_statement->var_init()), variables_in_current_scope);
+			AddVariable(EvaluateVarDecl(root_statement->var_decl()), variables_in_current_scope);
 		}
 		switch (root->type())
 		{
@@ -230,15 +229,15 @@ void Evaluater::EvaluateBlock(const std::vector<std::shared_ptr<Statement>>& roo
 	ClearOutOfScopeVars(variables_in_current_scope);
 }
 
-void Evaluater::Clear()
+void Evaluator::Clear()
 {
 	m_vars.clear();
 }
 
-void Evaluater::AddOperations()
+void Evaluator::AddOperations()
 {
 	// INT + INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("+",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("+",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableInt>(
@@ -247,7 +246,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// INT + FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("+",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("+",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(
@@ -256,7 +255,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableFloat>(vars.at(1))->value());
 	}));
 	// FLOAT + INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("+",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("+",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(
@@ -265,7 +264,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// FLOAT + FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("+",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("+",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(
@@ -277,7 +276,7 @@ void Evaluater::AddOperations()
 	//////////********************************************//////////////////
 
 	// INT - INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("-",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("-",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableInt>(
@@ -286,7 +285,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// INT - FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("-",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("-",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(
@@ -295,7 +294,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableFloat>(vars.at(1))->value());
 	}));
 	// FLOAT - INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("-",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("-",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(
@@ -304,7 +303,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// FLOAT - FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("-",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("-",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(
@@ -316,7 +315,7 @@ void Evaluater::AddOperations()
 	//////////********************************************//////////////////
 
 	// INT * INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("*",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("*",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableInt>(
@@ -325,7 +324,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// INT * FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("*",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("*",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(
@@ -334,7 +333,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableFloat>(vars.at(1))->value());
 	}));
 	// FLOAT * INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("*",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("*",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(
@@ -343,7 +342,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// FLOAT * FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("*",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("*",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(
@@ -355,7 +354,7 @@ void Evaluater::AddOperations()
 	//////////********************************************//////////////////
 
 	// INT / INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("/",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("/",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableInt>(
@@ -364,7 +363,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// INT / FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("/",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("/",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(
@@ -373,7 +372,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableFloat>(vars.at(1))->value());
 	}));
 	// FLOAT / INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("/",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("/",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(
@@ -382,7 +381,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// FLOAT / FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("/",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("/",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(
@@ -394,7 +393,7 @@ void Evaluater::AddOperations()
 	//////////********************************************//////////////////
 
 	// INT < INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("<",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("<",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -403,7 +402,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// INT < FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("<",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("<",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -412,7 +411,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableFloat>(vars.at(1))->value());
 	}));
 	// FLOAT < INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("<",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("<",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -421,7 +420,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// FLOAT < FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("<",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("<",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -433,7 +432,7 @@ void Evaluater::AddOperations()
 	//////////********************************************//////////////////
 
 	// INT > INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>(">",
+	m_operations_.Register(std::make_shared<OperationEvaluator>(">",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -442,7 +441,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// INT > FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>(">",
+	m_operations_.Register(std::make_shared<OperationEvaluator>(">",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -451,7 +450,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableFloat>(vars.at(1))->value());
 	}));
 	// FLOAT > INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>(">",
+	m_operations_.Register(std::make_shared<OperationEvaluator>(">",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -460,7 +459,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// FLOAT > FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>(">",
+	m_operations_.Register(std::make_shared<OperationEvaluator>(">",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -472,7 +471,7 @@ void Evaluater::AddOperations()
 	//////////********************************************//////////////////
 
 	// INT != INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("!=",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("!=",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -481,7 +480,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// INT != FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("!=",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("!=",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -490,7 +489,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableFloat>(vars.at(1))->value());
 	}));
 	// FLOAT != INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("!=",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("!=",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -499,7 +498,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// FLOAT != FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("!=",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("!=",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -511,7 +510,7 @@ void Evaluater::AddOperations()
 	//////////********************************************//////////////////
 
 	// INT == INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("==",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("==",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -520,7 +519,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// INT == FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("==",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("==",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -529,7 +528,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableFloat>(vars.at(1))->value());
 	}));
 	// FLOAT == INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("==",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("==",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -538,7 +537,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// FLOAT == FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("==",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("==",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -550,7 +549,7 @@ void Evaluater::AddOperations()
 	//////////********************************************//////////////////
 
 	// BOOL && BOOL
-	m_operations_.Register(std::make_shared<OperationEvaluater>("&&",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("&&",
 		std::vector<VariableType>{VariableType::kBool, VariableType::kBool },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -560,7 +559,7 @@ void Evaluater::AddOperations()
 	}));
 
 	// FLOAT && BOOL
-	m_operations_.Register(std::make_shared<OperationEvaluater>("&&",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("&&",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kBool },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -569,7 +568,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableBool>(vars.at(1))->value());
 	}));
 	// INT && BOOL
-	m_operations_.Register(std::make_shared<OperationEvaluater>("&&",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("&&",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kBool },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -578,7 +577,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableBool>(vars.at(1))->value());
 	}));
 	// BOOL && FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("&&",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("&&",
 		std::vector<VariableType>{VariableType::kBool, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -588,7 +587,7 @@ void Evaluater::AddOperations()
 	}));
 
 	// BOOL && INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("&&",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("&&",
 		std::vector<VariableType>{VariableType::kBool, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -599,7 +598,7 @@ void Evaluater::AddOperations()
 
 
 	// INT && INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("&&",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("&&",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -608,7 +607,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// INT && FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("&&",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("&&",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -617,7 +616,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableFloat>(vars.at(1))->value());
 	}));
 	// FLOAT && INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("&&",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("&&",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -626,7 +625,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// FLOAT && FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("&&",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("&&",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -637,7 +636,7 @@ void Evaluater::AddOperations()
 	//////////********************************************//////////////////
 
 	// BOOL || BOOL
-	m_operations_.Register(std::make_shared<OperationEvaluater>("||",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("||",
 		std::vector<VariableType>{VariableType::kBool, VariableType::kBool },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -647,7 +646,7 @@ void Evaluater::AddOperations()
 	}));
 
 	// FLOAT || BOOL
-	m_operations_.Register(std::make_shared<OperationEvaluater>("||",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("||",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kBool },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -656,7 +655,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableBool>(vars.at(1))->value());
 	}));
 	// INT || BOOL
-	m_operations_.Register(std::make_shared<OperationEvaluater>("||",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("||",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kBool },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -665,7 +664,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableBool>(vars.at(1))->value());
 	}));
 	// BOOL || FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("||",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("||",
 		std::vector<VariableType>{VariableType::kBool, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -675,7 +674,7 @@ void Evaluater::AddOperations()
 	}));
 
 	// BOOL || INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("||",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("||",
 		std::vector<VariableType>{VariableType::kBool, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -686,7 +685,7 @@ void Evaluater::AddOperations()
 
 
 	// INT || INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("||",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("||",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -695,7 +694,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// INT || FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("||",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("||",
 		std::vector<VariableType>{VariableType::kInt, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -704,7 +703,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableFloat>(vars.at(1))->value());
 	}));
 	// FLOAT || INT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("||",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("||",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -713,7 +712,7 @@ void Evaluater::AddOperations()
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// FLOAT || FLOAT
-	m_operations_.Register(std::make_shared<OperationEvaluater>("||",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("||",
 		std::vector<VariableType>{VariableType::kFloat, VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableBool>(
@@ -724,7 +723,7 @@ void Evaluater::AddOperations()
 
 
 	// sqrt(FLOAT)
-	m_operations_.Register(std::make_shared<OperationEvaluater>("sqrt",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("sqrt",
 		std::vector<VariableType>{VariableType::kFloat },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(
@@ -732,7 +731,7 @@ void Evaluater::AddOperations()
 	}));
 
 	// sqrt(INT)
-	m_operations_.Register(std::make_shared<OperationEvaluater>("sqrt",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("sqrt",
 		std::vector<VariableType>{VariableType::kInt },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(
@@ -740,7 +739,7 @@ void Evaluater::AddOperations()
 	}));
 
 	// sqrt(BOOl)
-	m_operations_.Register(std::make_shared<OperationEvaluater>("sqrt",
+	m_operations_.Register(std::make_shared<OperationEvaluator>("sqrt",
 		std::vector<VariableType>{VariableType::kBool },
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(

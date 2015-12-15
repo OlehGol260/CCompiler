@@ -7,7 +7,7 @@
 #include "statement_parser.h"
 #include "reserved_word_parser.h"
 
-void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems)
+void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems) const
 {
 	auto state = LT::kUnknown;
 	std::shared_ptr<LexemeInterface> next_token = nullptr;

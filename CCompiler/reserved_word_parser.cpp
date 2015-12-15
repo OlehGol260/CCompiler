@@ -150,7 +150,7 @@ std::shared_ptr<Context> ReservedWordParser::ParseCurlyBracedBlock(const std::ve
 		} 
 		if (Grammar::IsReservedWord(curr_lexem_type))
 		{
-			auto reserved_word_block = FindControlFlowStatement(it, body_lexems.cend());
+			auto reserved_word_block = FindReservedWordBlock(it, body_lexems.cend());
 			body_context->AddStatement(ReservedWordParser::Parse(reserved_word_block));
 			statement_lexem_interfs.clear();
 			it += reserved_word_block.size() - 1; // WATCH OUT HERE
@@ -160,7 +160,7 @@ std::shared_ptr<Context> ReservedWordParser::ParseCurlyBracedBlock(const std::ve
 	return body_context;
 }
 
-std::vector<std::shared_ptr<LexemeInterface>> ReservedWordParser::FindControlFlowStatement(lexeme_interfaces_iter cbegin, lexeme_interfaces_iter cend)
+std::vector<std::shared_ptr<LexemeInterface>> ReservedWordParser::FindReservedWordBlock(lexeme_interfaces_iter cbegin, lexeme_interfaces_iter cend)
 {
 	std::vector<std::shared_ptr<LexemeInterface>> result;
 	std::shared_ptr<LexemeInterface> curr_lexem = nullptr;
@@ -176,7 +176,8 @@ std::vector<std::shared_ptr<LexemeInterface>> ReservedWordParser::FindControlFlo
 		{
 			opened_braces_count++;
 		}
-		if (Grammar::IsCloseBrace(curr_lexem_type) && !--opened_braces_count)
+		//Workaround to find print statement
+		if (Grammar::IsPunctuator(curr_lexem_type) && !opened_braces_count || Grammar::IsCloseBrace(curr_lexem_type) && !--opened_braces_count)
 		{
 			break;
 		}

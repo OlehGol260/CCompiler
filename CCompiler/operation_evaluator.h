@@ -14,15 +14,15 @@ public:
 	virtual std::vector<VariableType> SupportedTypes() = 0;
 };
 
-class OperationEvaluater : public OperationEvaluatorInterface
+class OperationEvaluator : public OperationEvaluatorInterface
 {
 public:
 	using Action = std::function<std::shared_ptr<Variable>(const std::vector<std::shared_ptr<Variable>>&)>;
 
-	OperationEvaluater(const std::string& operation, const std::vector<VariableType>& var_types, Action action) :
+	OperationEvaluator(const std::string& operation, const std::vector<VariableType>& var_types, Action action) :
 		m_operation_(operation), m_action_(action), m_variable_types_(var_types) {}
 
-	virtual ~OperationEvaluater() = default;
+	virtual ~OperationEvaluator() = default;
 
 	virtual std::shared_ptr<Variable> Evaluate(const std::vector<std::shared_ptr<Variable>>& operands) override
 	{

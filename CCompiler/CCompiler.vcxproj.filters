@@ -75,11 +75,11 @@
     <ClCompile Include="reserved_word_parser.cpp">
       <Filter>Source Files\core\parser\control_flow_parser</Filter>
     </ClCompile>
-    <ClCompile Include="evaluater.cpp">
-      <Filter>Source Files\core\executer</Filter>
-    </ClCompile>
     <ClCompile Include="translator.cpp">
       <Filter>Source Files\core\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="evaluator.cpp">
+      <Filter>Source Files\core\executer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -137,9 +137,6 @@
     <ClInclude Include="variable.h">
       <Filter>Source Files\core\executer\Variable</Filter>
     </ClInclude>
-    <ClInclude Include="evaluater.h">
-      <Filter>Source Files\core\executer</Filter>
-    </ClInclude>
     <ClInclude Include="variable_factory.h">
       <Filter>Source Files\core\executer\Variable</Filter>
     </ClInclude>
@@ -158,14 +155,17 @@
     <ClInclude Include="operations.h">
       <Filter>Source Files\core\executer</Filter>
     </ClInclude>
-    <ClInclude Include="operation_evaluater.h">
-      <Filter>Source Files\core\executer</Filter>
-    </ClInclude>
     <ClInclude Include="variable_str_traits.h">
       <Filter>Source Files\core\executer\Variable</Filter>
     </ClInclude>
     <ClInclude Include="translator.h">
       <Filter>Source Files\core\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="evaluator.h">
+      <Filter>Source Files\core\executer</Filter>
+    </ClInclude>
+    <ClInclude Include="operation_evaluator.h">
+      <Filter>Source Files\core\executer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

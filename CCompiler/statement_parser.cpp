@@ -21,7 +21,7 @@ std::shared_ptr<Statement> StatementParser::Parse(const std::vector<std::shared_
 		auto var_init = std::make_shared<Lexeme>(LT::kVarDeclaration, "DEF");
 		var_init->set_left(std::static_pointer_cast<Lexeme>(lexems.at(0)));
 		var_init->set_right(std::static_pointer_cast<Lexeme>(lexems.at(1)));
-		statement->set_var_init(var_init);
+		statement->set_var_decl(var_init);
 	}
 	if (Grammar::IsPunctuator(lexems.back()->type()))
 	{

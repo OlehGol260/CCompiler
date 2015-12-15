@@ -1,13 +1,13 @@
 #pragma once
-#include "lexeme.h"
 #include <vector>
 #include "statement.h"
 
 class Context
 {
 public:
-	explicit Context(int level) : begin_(nullptr), end_(nullptr) {}
-	Context(std::shared_ptr<LexemeInterface> open, std::shared_ptr<LexemeInterface> close) : begin_(open), end_(close), roots_() {}
+	
+	Context(std::shared_ptr<LexemeInterface> open, std::shared_ptr<LexemeInterface> close) : begin_(open), end_(close) {}
+	Context() : Context(nullptr,nullptr) {}
 	void AddStatement(std::shared_ptr<Statement> st) { roots_.push_back(st); };
 	auto roots() const { return roots_; }
 

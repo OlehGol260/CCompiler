@@ -119,7 +119,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="compiler.cpp" />
-    <ClCompile Include="evaluater.cpp" />
+    <ClCompile Include="evaluator.cpp" />
     <ClCompile Include="reserved_word_parser.cpp" />
     <ClCompile Include="grammar.cpp" />
     <ClCompile Include="lexer.cpp" />
@@ -132,9 +132,9 @@
     <ClInclude Include="bracket.h" />
     <ClInclude Include="compiler.h" />
     <ClInclude Include="context.h" />
-    <ClInclude Include="evaluater.h" />
+    <ClInclude Include="evaluator.h" />
     <ClInclude Include="operations.h" />
-    <ClInclude Include="operation_evaluater.h" />
+    <ClInclude Include="operation_evaluator.h" />
     <ClInclude Include="reserved_word_parser.h" />
     <ClInclude Include="enums.h" />
     <ClInclude Include="err_msg.h" />

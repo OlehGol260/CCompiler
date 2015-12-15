@@ -7,7 +7,7 @@ int main()
 						if (D > 0 || D == 0) { x1 = ((0 - b) + sqrt(D)) / (2 * a);  x2 = ((0 - b) - sqrt(D)) / (2 * a); print(x1); print(x2); } \
 						else { print(\"Descriminant must be greater or equal to zero\"); }");
 
-	return 0;
+		return 0;
 }
 
 
