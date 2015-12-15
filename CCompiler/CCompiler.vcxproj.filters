@@ -22,9 +22,6 @@
     <Filter Include="Source Files\core\lexer">
       <UniqueIdentifier>{9f1d6efc-23e4-4426-8183-96a2e14f571d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\core\lexem">
-      <UniqueIdentifier>{4cde765b-c271-4ed5-9e3b-f2df7b39a770}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\core\parser">
       <UniqueIdentifier>{c68e0f06-6013-44ab-a19c-c36b0845dd5d}</UniqueIdentifier>
     </Filter>
@@ -51,6 +48,12 @@
     </Filter>
     <Filter Include="Source Files\core\translator">
       <UniqueIdentifier>{ad1df653-c528-48cc-9eef-6c088cca11bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\lexeme">
+      <UniqueIdentifier>{4cde765b-c271-4ed5-9e3b-f2df7b39a770}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\executer\operations">
+      <UniqueIdentifier>{f67b52b4-5097-4b0e-a8f2-36ffa24dd793}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -95,9 +98,6 @@
     <ClInclude Include="utils.h">
       <Filter>Source Files\core\grammar</Filter>
     </ClInclude>
-    <ClInclude Include="bracket.h">
-      <Filter>Source Files\core\grammar</Filter>
-    </ClInclude>
     <ClInclude Include="parser.h">
       <Filter>Source Files\core\parser</Filter>
     </ClInclude>
@@ -120,16 +120,16 @@
       <Filter>Source Files\core\parser\statement_parser</Filter>
     </ClInclude>
     <ClInclude Include="lexeme.h">
-      <Filter>Source Files\core\lexem</Filter>
+      <Filter>Source Files\core\lexeme</Filter>
     </ClInclude>
     <ClInclude Include="lexeme_condition.h">
-      <Filter>Source Files\core\lexem</Filter>
+      <Filter>Source Files\core\lexeme</Filter>
     </ClInclude>
     <ClInclude Include="lexeme_interface.h">
-      <Filter>Source Files\core\lexem</Filter>
+      <Filter>Source Files\core\lexeme</Filter>
     </ClInclude>
     <ClInclude Include="lexeme_loop.h">
-      <Filter>Source Files\core\lexem</Filter>
+      <Filter>Source Files\core\lexeme</Filter>
     </ClInclude>
     <ClInclude Include="reserved_word_parser.h">
       <Filter>Source Files\core\parser\control_flow_parser</Filter>
@@ -150,10 +150,7 @@
       <Filter>Source Files\core\executer\Variable</Filter>
     </ClInclude>
     <ClInclude Include="lexeme_func.h">
-      <Filter>Source Files\core\lexem</Filter>
-    </ClInclude>
-    <ClInclude Include="operations.h">
-      <Filter>Source Files\core\executer</Filter>
+      <Filter>Source Files\core\lexeme</Filter>
     </ClInclude>
     <ClInclude Include="variable_str_traits.h">
       <Filter>Source Files\core\executer\Variable</Filter>
@@ -165,7 +162,10 @@
       <Filter>Source Files\core\executer</Filter>
     </ClInclude>
     <ClInclude Include="operation_evaluator.h">
-      <Filter>Source Files\core\executer</Filter>
+      <Filter>Source Files\core\executer\operations</Filter>
+    </ClInclude>
+    <ClInclude Include="operations.h">
+      <Filter>Source Files\core\executer\operations</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

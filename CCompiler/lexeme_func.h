@@ -2,7 +2,7 @@
 #include "lexeme_interface.h"
 #include <memory>
 
-/*
+/*!
 	Holds info about sqrt and print lexemes
 */
 class LexemeFunc : public LexemeInterface

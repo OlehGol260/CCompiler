@@ -5,7 +5,7 @@
 #include "enums.h"
 #include "lexeme_interface.h"
 
-/*
+/*!
 	A binary tree like representation of syntax tree.
 	for example a statement a = 10 + 2 * 3 in terms of this class looks like this:
 						 =

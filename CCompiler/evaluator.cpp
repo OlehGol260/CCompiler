@@ -77,7 +77,7 @@ std::shared_ptr<Variable> Evaluator::EvaluateVarDecl(std::shared_ptr<LexemeInter
 	return VariableFactory::Generate(var_decl_lexeme->left()->value(), var_decl_lexeme->right()->value());
 }
 
-void Evaluator::EvaluateIf(std::shared_ptr<LexemeInterface> if_st)
+void Evaluator::EvaluateIfElse(std::shared_ptr<LexemeInterface> if_st)
 {
 	auto if_lexem = std::static_pointer_cast<LexemeCondition>(if_st);
 
@@ -210,7 +210,7 @@ void Evaluator::EvaluateBlock(const std::vector<std::shared_ptr<Statement>>& roo
 		switch (root->type())
 		{
 		case LT::kIf:
-			EvaluateIf(root);
+			EvaluateIfElse(root);
 			break;
 		case LT::kAssignment:
 			EvaluateAssignment(root);

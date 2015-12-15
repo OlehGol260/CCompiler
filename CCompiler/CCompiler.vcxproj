@@ -129,7 +129,6 @@
     <ClCompile Include="translator.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bracket.h" />
     <ClInclude Include="compiler.h" />
     <ClInclude Include="context.h" />
     <ClInclude Include="evaluator.h" />

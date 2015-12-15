@@ -9,23 +9,22 @@
 class Lexer
 {
 public:
-	/*
+	/*!
 		Parse the given code generating a vector of lexems
-
-		@param code_ string representation of the code 
+		\param code_ string representation of the code 
 	*/
 	void Parse(const std::string& code_);
 
-	/*
+	/*!
 		 Add spaces between operators and handle double qoutes used in print statement
-		 @param code_ part of the whole code which need to be processed
-		 @return processed string
+		 \param code_ part of the whole code which need to be processed
+		 \return processed string
 	*/
 	static std::string AddSpaces(const std::string& code_);
-	/*
-		Getter for lexems
 
-		@return lexems_
+	/*!
+		Getter for lexems
+		\return lexems_
 	*/
 	auto lexems() const noexcept { return lexems_; }
 private:

@@ -3,7 +3,7 @@
 
 #include "lexeme_interface.h"
 
-/*
+/*!
 	Contains if/else statement
 	If 'if' doesn't have 'else' statement, else_body_ will be nullptr
 */

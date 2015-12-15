@@ -4,6 +4,10 @@
 
 #include "lexeme.h"
 
+/*!
+	Holds all allowed terminals in parsed text and give API to check if 
+	certain string or type exists as it has to 
+*/
 class Grammar
 {
 public:

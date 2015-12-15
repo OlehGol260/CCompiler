@@ -1,7 +1,7 @@
 #pragma once
 #include "enums.h"
 
-/* 
+/*!
 	Holds common info about a lexeme - its type, string value and level
 */
 class LexemeInterface

@@ -86,11 +86,3 @@ std::string Lexer::AddSpaces(const std::string& code)
 	auto a = ss.str();
 	return ss.str();
 }
-
-void Lexer::print() const
-{
-	for (auto& lexem : lexems_)
-	{
-		std::cout << lexem->value() << "\t\t"  << LexemTypeNames.at(lexem->type()) << std::endl;
-	}
-}
