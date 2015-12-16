@@ -144,10 +144,10 @@ std::string Translator::TranslateExpression(std::shared_ptr<LexemeInterface> li)
 	{
 		return "variable " + li_value;
 	}
-	if (Grammar::IsSqrt(li_type))
+	if (Grammar::IsSqrt(li_type) || Grammar::IsLogicalNot(li_type))
 	{
 		auto sqrt_body = std::static_pointer_cast<LexemeFunc>(li);
-		return " square root of " + TranslateExpression(sqrt_body->body());
+		return (Grammar::IsSqrt(li_type) ? " square root of " : "Logical NOT of ")  + TranslateExpression(sqrt_body->body());
 	}
 	return li_value;
 }

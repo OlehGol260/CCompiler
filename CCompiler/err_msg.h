@@ -62,6 +62,10 @@ public:
 		AbortMsg("Variable " + var_name + " has not been declared in the current scope");
 	}
 
+	static void AbortAlreadyExistenVariable(const std::string& var_name)
+	{
+		AbortMsg("Variable " + var_name + " already exists");
+	}
 	/*!
 		Terminates the program signalyzing that the variable var_name hasn't been declared in the current scope
 	*/

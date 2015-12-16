@@ -43,6 +43,10 @@ private:
 	*/
 	std::shared_ptr<Variable> EvaluateSqrt(std::shared_ptr<LexemeInterface> root) const;
 
+
+	std::shared_ptr<Variable> EvaluateLogicalNot(std::shared_ptr<LexemeInterface> root) const;
+	std::shared_ptr<Variable> EvaluateUnaryOperation(std::shared_ptr<LexemeInterface> root) const;
+
 	/*!
 		Find a variable by given name in m_vars
 		\param var_name what to find
@@ -142,4 +146,5 @@ private:
 private:
 	std::vector<std::shared_ptr<Variable>> m_vars; /*!< all available variables during the code execution*/
 	Operations m_operations_; /*!< operations which can be performed over given types and given operation sign*/
+	static int m_kInfinite_;
 };

@@ -58,6 +58,7 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems) 
 
 		switch (state)
 		{
+		
 		case LT::kSqrt:
 			if (next_token_type != LT::kOpenParenthesis)
 			{
@@ -100,7 +101,21 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems) 
 			}
 			state = next_token_type;
 			break;
-
+		case LT::kLogicalNot:
+			switch (next_token_type)
+			{
+			case LexemeType::kOpenParenthesis:
+			case LexemeType::kFalse:
+			case LexemeType::kTrue:
+			case LexemeType::kVar:
+			case LexemeType::kImmediateFloat:
+			case LexemeType::kImmediateInteger:
+				state = next_token_type;
+				break;
+			default:
+				is_next_token_invalid = true;
+			}
+			break;
 		case LT::kIf:
 			is_if_block = true; //break here is ommitted on purpose
 		case LT::kFor:
@@ -123,6 +138,7 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems) 
 			case LT::kImmediateFloat:
 			case LT::kImmediateInteger:
 			case LT::kOpenParenthesis:
+			case LT::kLogicalNot:
 			case LT::kTrue:
 			case LT::kFalse:
 				state = next_token_type;
@@ -146,6 +162,7 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems) 
 			case LT::kOpenParenthesis:
 			case LT::kTrue:
 			case LT::kFalse:
+			case LT::kLogicalNot:
 				state = next_token_type;
 				break;
 			default:
@@ -252,6 +269,7 @@ void Parser::Parse(const std::vector<std::shared_ptr<LexemeInterface>>& lexems) 
 			case LT::kTrue:
 			case LT::kFalse:
 			case LT::kOpenParenthesis:
+			case LT::kLogicalNot:
 			case LT::kImmediateFloat:
 			case LT::kImmediateInteger:
 			case LT::kVarType:

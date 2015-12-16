@@ -21,7 +21,7 @@ public:
 	template<typename T>
 	static bool IsOperator(const T& t)
 	{
-		return IsBinaryOperator(t) || IsBracket(t) ||
+		return IsBinaryOperator(t) || IsBracket(t)||  IsLogicalNot(t) ||
 			IsPunctuator(t) || IsVarType(t) || IsDoubleQuote(t);
 	}
 

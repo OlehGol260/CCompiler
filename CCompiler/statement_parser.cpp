@@ -41,7 +41,7 @@ std::shared_ptr<LexemeInterface> StatementParser::InnerStatParse(std::shared_ptr
 	std::shared_ptr<LexemeInterface> current_token = nullptr; //if only literal passed, following loops won't be executed and current token will hold the literal as needed
 	std::shared_ptr<LexemeInterface> result_token = nullptr;
 	auto found_needed_op = false;
-
+	int position = 1;
 	for (auto it_bin = Grammar::binary_operators().cbegin(); !found_needed_op && it_bin != Grammar::binary_operators().cend(); ++it_bin)
 	{
 		for (auto it_tok = rbegin; !found_needed_op && it_tok != rend; ++it_tok)
@@ -49,6 +49,7 @@ std::shared_ptr<LexemeInterface> StatementParser::InnerStatParse(std::shared_ptr
 			current_token = *it_tok;
 			if (Grammar::IsBracket(current_token->type())) { continue; }
 			result_token = current_token;
+			position = rend - it_tok;
 			if (curr_level == result_token->level() && Grammar::IsBinaryOperator(result_token->type()) && result_token->value() == *it_bin)
 			{
 				InnerStatParse(result_token, WhereAttachCh::kLeft, it_tok + 1, rend); // +1 - not include current token,
@@ -58,13 +59,14 @@ std::shared_ptr<LexemeInterface> StatementParser::InnerStatParse(std::shared_ptr
  			}
 		}
 	}
-	if (!parent) { return result_token; }
-
-	if (Grammar::IsSqrt(result_token->type()))
+	
+	auto result_token_type = result_token->type();
+	if (Grammar::IsSqrt(result_token_type) || Grammar::IsLogicalNot(result_token_type))
 	{
 		auto result_token_func = std::static_pointer_cast<LexemeFunc>(result_token);
-		result_token_func->set_body(InnerStatParse(nullptr, WhereAttachCh::kUnknown, rbegin, rend - 1));
+		result_token_func->set_body(InnerStatParse(nullptr, WhereAttachCh::kUnknown, rbegin, rend - position));
 	}
+	if (!parent) { return result_token; }
 	auto parent_ = std::static_pointer_cast<Lexeme>(parent);
 
 	if (side == WhereAttachCh::kLeft)
@@ -77,7 +79,6 @@ std::shared_ptr<LexemeInterface> StatementParser::InnerStatParse(std::shared_ptr
 	}
 	return parent;
 }
-
 int StatementParser::GetLowestLevel(lexeme_interfaces_reverse_iter rbegin, lexeme_interfaces_reverse_iter rend)
 {
 	auto min_lvl = 100000;

@@ -13,6 +13,8 @@
 #include "lexeme_loop.h"
 #include "grammar.h"
 
+int Evaluator::m_kInfinite_ = 10000;
+
 void Evaluator::Evaluate(const std::vector<std::shared_ptr<Statement>>& root_statements)
 {
 	EvaluateBlock(root_statements);
@@ -33,7 +35,21 @@ void Evaluator::ClearOutOfScopeVars(const std::vector<std::shared_ptr<Variable>>
 	}
 }
 
+
 std::shared_ptr<Variable> Evaluator::EvaluateSqrt(std::shared_ptr<LexemeInterface> root) const
+{
+	auto root_func = std::static_pointer_cast<LexemeFunc>(root);
+	return m_operations_.Evaluate(root->value(), std::vector<std::shared_ptr<Variable>>{EvaluateExpression(root_func->body())});
+}
+
+std::shared_ptr<Variable> Evaluator::EvaluateLogicalNot(std::shared_ptr<LexemeInterface> root) const
+{
+	auto root_func = std::static_pointer_cast<LexemeFunc>(root);
+	return m_operations_.Evaluate(root->value(), std::vector<std::shared_ptr<Variable>>{EvaluateExpression(root_func->body())});
+
+}
+
+std::shared_ptr<Variable> Evaluator::EvaluateUnaryOperation(std::shared_ptr<LexemeInterface> root) const
 {
 	auto root_func = std::static_pointer_cast<LexemeFunc>(root);
 	return m_operations_.Evaluate(root->value(), std::vector<std::shared_ptr<Variable>>{EvaluateExpression(root_func->body())});
@@ -74,6 +90,9 @@ std::shared_ptr<Variable> Evaluator::EvaluateVarDecl(std::shared_ptr<LexemeInter
 {
 	assert(var_decl && "Empty var declaration");
 	auto var_decl_lexeme = std::static_pointer_cast<Lexeme>(var_decl);
+	auto var_name = var_decl_lexeme->right()->value();
+	auto is_exist = FindVariableByName(var_name);
+	if (is_exist) { ErrMessage::AbortAlreadyExistenVariable(var_name); }
 	return VariableFactory::Generate(var_decl_lexeme->left()->value(), var_decl_lexeme->right()->value());
 }
 
@@ -96,10 +115,16 @@ void Evaluator::EvaluateIfElse(std::shared_ptr<LexemeInterface> if_st)
 
 std::shared_ptr<Variable> Evaluator::EvaluateExpression(std::shared_ptr<LexemeInterface> root) const
 {
-	assert(root && "Tried to evaluate empty expression");
-	auto root_lexeme = std::static_pointer_cast<Lexeme>(root);
+	assert(root && "Tried to evaluate an empty expression");
+
 	auto root_type = root->type();
 	auto root_value = root->value();
+	if (Grammar::IsSqrt(root_type) || Grammar::IsLogicalNot(root_type))
+	{
+		return EvaluateUnaryOperation(root);
+	}
+	auto root_lexeme = std::static_pointer_cast<Lexeme>(root);
+
 
 	if (Grammar::IsBinaryOperator(root_type))
 	{
@@ -117,10 +142,7 @@ std::shared_ptr<Variable> Evaluator::EvaluateExpression(std::shared_ptr<LexemeIn
 		}
 		return variable;
 	}
-	if (Grammar::IsSqrt(root_type))
-	{
-		return EvaluateSqrt(root);
-	}
+	
 	return VariableFactory::GenerateAnonym(Grammar::LexemeTypeToVariableType(root_type), root_value);
 }
 
@@ -139,8 +161,14 @@ void Evaluator::EvaluateForLoop(std::shared_ptr<LexemeInterface> root)
 			AddVariable(EvaluateVarDecl(counter_init), variables_in_current_scope);
 		}
 	}
+	int counter = 0;
 	for (; std::static_pointer_cast<VariableBool>(EvaluateExpression(root_loop_condition.at(1)->root()))->value(); EvaluateAssignment(root_loop_condition.at(2)->root()))
 	{
+		counter++;
+		if (counter > m_kInfinite_)
+		{
+			ErrMessage::AbortMsg("Infinite loop");
+		}
 		EvaluateBlock(root_loop->body()->roots());
 	}
 	ClearOutOfScopeVars(variables_in_current_scope);
@@ -150,9 +178,15 @@ void Evaluator::EvaluateWhileLoop(std::shared_ptr<LexemeInterface> root)
 {
 	assert(root);
 	auto root_loop = std::static_pointer_cast<LexemeLoop>(root);
+	auto counter = 0;
 	while (std::static_pointer_cast<VariableBool>(EvaluateExpression(root_loop->condition()->roots().at(0)->root()))->value())
 	{
 		EvaluateBlock(root_loop->body()->roots());
+		counter++;
+		if (counter > m_kInfinite_)
+		{
+			ErrMessage::AbortMsg("Infinite loop");
+		}
 	}
 }
 
@@ -331,7 +365,7 @@ void Evaluator::AddOperations()
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(
 			std::static_pointer_cast<VariableFloat>(vars.at(0))->value()
-			-
+			*
 			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 	// FLOAT * FLOAT
@@ -342,6 +376,19 @@ void Evaluator::AddOperations()
 			std::static_pointer_cast<VariableFloat>(vars.at(0))->value()
 			*
 			std::static_pointer_cast<VariableFloat>(vars.at(1))->value());
+	}));
+
+
+	//////////********************************************//////////////////
+
+	// INT % INT
+	m_operations_.Register(std::make_shared<OperationEvaluator>("%",
+		std::vector<VariableType>{VariableType::kInt, VariableType::kInt },
+		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
+		return std::make_shared<VariableInt>(
+			std::static_pointer_cast<VariableInt>(vars.at(0))->value()
+			%
+			std::static_pointer_cast<VariableInt>(vars.at(1))->value());
 	}));
 
 	//////////********************************************//////////////////
@@ -737,5 +784,27 @@ void Evaluator::AddOperations()
 		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
 		return std::make_shared<VariableFloat>(
 			std::sqrt(static_cast<float>(std::static_pointer_cast<VariableBool>(vars.at(0))->value())));
+	}));
+
+	// !(BOOL)
+	m_operations_.Register(std::make_shared<OperationEvaluator>("!",
+		std::vector<VariableType>{VariableType::kBool },
+		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
+		return std::make_shared<VariableBool>(
+			!(std::static_pointer_cast<VariableBool>(vars.at(0))->value()));
+	}));
+	// !(INT)
+	m_operations_.Register(std::make_shared<OperationEvaluator>("!",
+		std::vector<VariableType>{VariableType::kInt },
+		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
+		return std::make_shared<VariableBool>(
+			!(static_cast<int>(std::static_pointer_cast<VariableInt>(vars.at(0))->value())));
+	}));
+	// !(FLOAT)
+	m_operations_.Register(std::make_shared<OperationEvaluator>("!",
+		std::vector<VariableType>{VariableType::kFloat },
+		[](const std::vector<std::shared_ptr<Variable>>& vars) -> auto {
+		return std::make_shared<VariableBool>(
+			!static_cast<float>(std::static_pointer_cast<VariableFloat>(vars.at(0))->value()));
 	}));
 }

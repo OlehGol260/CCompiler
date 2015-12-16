@@ -284,6 +284,7 @@ LexemeType Grammar::GetType(const std::string& str)
 {
 	if (IsSqrt(str)) { return LexemeType::kSqrt; }
 	if (IsTrue(str)) { return LexemeType::kTrue; }
+	if (IsLogicalNot(str)) { return LexemeType::kLogicalNot; }
 	if (IsFalse(str)) { return LexemeType::kFalse; }
 	if (IsVarType(str)) { return LexemeType::kVarType; }
 	if (IsAssignment(str)) { return LexemeType::kAssignment; }

@@ -37,6 +37,7 @@ void Lexer::Parse(const std::string& code)
 				break;
 			case LT::kPrint:
 			case LT::kSqrt:
+			case LT::kLogicalNot:
 				lexeme = std::make_shared<LexemeFunc>(type, token);
 				break;
 			default:
