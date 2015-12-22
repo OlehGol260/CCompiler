@@ -1,8 +1,12 @@
 #include "compiler.h"
-
+#include "obfuscator.h"
 int main()
 {
 	Compiler compiler;
+	//compiler.Compile("E://myfile.txt",
+	//	"int a = 1 + 2 * ( 3 + 2 / 2 );\
+	//	print(a);"
+	//	);
 	compiler.Compile("E://myfile.txt",
 		" bool bool_ = (!(10 > 3 || 3 == 0));\
 print(bool_);\

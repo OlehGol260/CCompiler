@@ -124,6 +124,7 @@
   <ItemGroup>
     <ClCompile Include="compiler.cpp" />
     <ClCompile Include="evaluator.cpp" />
+    <ClCompile Include="obfuscator.cpp" />
     <ClCompile Include="reserved_word_parser.cpp" />
     <ClCompile Include="grammar.cpp" />
     <ClCompile Include="lexer.cpp" />
@@ -136,6 +137,7 @@
     <ClInclude Include="compiler.h" />
     <ClInclude Include="context.h" />
     <ClInclude Include="evaluator.h" />
+    <ClInclude Include="obfuscator.h" />
     <ClInclude Include="operations.h" />
     <ClInclude Include="operation_evaluator.h" />
     <ClInclude Include="reserved_word_parser.h" />

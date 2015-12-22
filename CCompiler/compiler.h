@@ -3,6 +3,7 @@
 #include "parser.h"
 #include "evaluator.h"
 #include "translator.h"
+#include "obfuscator.h"
 
 /*!
 	
@@ -39,4 +40,5 @@ private:
 	Parser m_parser_;
 	Evaluator m_evaluater_;
 	Translator m_translator_;
+	Obfuscator m_obfuscator_;
 };

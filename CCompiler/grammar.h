@@ -38,6 +38,8 @@ public:
 		return std::find(vec.cbegin(), vec.cend(), t) != vec.cend();
 	}
 
+	static bool IsLexemeFunc(const LexemeType& lt);
+
 	static std::string GetTextByOperation(const std::string& op);
 	static bool IsAssignment(const std::string& to_check);
 	static bool IsPunctuator(const std::string& to_check);

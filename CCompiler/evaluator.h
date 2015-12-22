@@ -37,14 +37,10 @@ private:
 	void ClearOutOfScopeVars(const std::vector<std::shared_ptr<Variable>>& lcl_vars);
 
 	/*!
-		Evaluate sqrt function
-		\param root syntax tree for sqrt 
+		Evaluate a function
+		\param root syntax tree for a function 
 		\return variable holding VariableFloat
 	*/
-	std::shared_ptr<Variable> EvaluateSqrt(std::shared_ptr<LexemeInterface> root) const;
-
-
-	std::shared_ptr<Variable> EvaluateLogicalNot(std::shared_ptr<LexemeInterface> root) const;
 	std::shared_ptr<Variable> EvaluateUnaryOperation(std::shared_ptr<LexemeInterface> root) const;
 
 	/*!

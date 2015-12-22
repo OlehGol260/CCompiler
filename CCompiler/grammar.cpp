@@ -73,6 +73,11 @@ VariableType Grammar::LexemeTypeToVariableType(LexemeType lt)
 	return VariableType::kInt; //Workaround to shut the warning. This statement is never executed as an AbortMsg terminates the program
 }
 
+bool Grammar::IsLexemeFunc(const LexemeType& lt)
+{
+	return IsLogicalNot(lt) || IsSqrt(lt) || IsPrint(lt);
+}
+
 std::string Grammar::GetTextByOperation(const std::string& op)
 {
 	assert(IsBinaryOperator(op));

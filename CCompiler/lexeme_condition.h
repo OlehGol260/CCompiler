@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 
+#include "context.h"
 #include "lexeme_interface.h"
 
 /*!
@@ -15,9 +16,11 @@ public:
 
 	virtual ~LexemeCondition() = default;
 
-	auto conidition() const { return condition_; }
+	auto condition() const { return condition_; }
 	auto if_body() const { return if_body_; }
 	auto else_body() const { return else_body_; }
+
+	bool has_else() const { return else_body_ != nullptr; }
 
 	void set_condition(std::shared_ptr<Statement> cond) { condition_ = cond; }
 	void set_if_body(std::shared_ptr<Context> if_body) { if_body_ = if_body; }

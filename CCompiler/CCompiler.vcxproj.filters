@@ -55,6 +55,9 @@
     <Filter Include="Source Files\core\executer\operations">
       <UniqueIdentifier>{f67b52b4-5097-4b0e-a8f2-36ffa24dd793}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\obfuscator">
+      <UniqueIdentifier>{2b4d1760-cbe5-499a-82c2-6490df5bda83}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -83,6 +86,9 @@
     </ClCompile>
     <ClCompile Include="evaluator.cpp">
       <Filter>Source Files\core\executer</Filter>
+    </ClCompile>
+    <ClCompile Include="obfuscator.cpp">
+      <Filter>Source Files\core\obfuscator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="operations.h">
       <Filter>Source Files\core\executer\operations</Filter>
+    </ClInclude>
+    <ClInclude Include="obfuscator.h">
+      <Filter>Source Files\core\obfuscator</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

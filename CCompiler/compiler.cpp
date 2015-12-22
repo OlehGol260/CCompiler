@@ -19,6 +19,10 @@ void Compiler::InnerCompile(const std::string& code)
 {
 	m_lexer_.Parse(code);
 	m_parser_.Parse(m_lexer_.lexems());
-	m_evaluater_.Evaluate(m_parser_.main_context()->roots());
-	m_translator_.Translate(m_parser_.main_context()->roots());
+	auto parsed_roots = m_parser_.main_context()->roots();
+	m_obfuscator_.Obfuscate(parsed_roots);
+	m_translator_.Translate(parsed_roots);
+	
+	m_evaluater_.Evaluate(parsed_roots);
+	
 }

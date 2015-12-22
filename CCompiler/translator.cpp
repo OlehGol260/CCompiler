@@ -53,7 +53,7 @@ void Translator::TranslateIfElse(std::shared_ptr<LexemeInterface> li)
 	assert(li && "Tried to translate an empty lexeme");
 	auto if_lexeme = std::static_pointer_cast<LexemeCondition>(li);
 
-	auto cond_lexeme = if_lexeme->conidition();
+	auto cond_lexeme = if_lexeme->condition();
 	ss_ << "If value of " << TranslateExpression(cond_lexeme->root()) << " is true ";
 
 	TranslateIfNotEmpty(if_lexeme->if_body(), "then");

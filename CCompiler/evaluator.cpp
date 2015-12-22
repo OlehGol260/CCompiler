@@ -35,20 +35,6 @@ void Evaluator::ClearOutOfScopeVars(const std::vector<std::shared_ptr<Variable>>
 	}
 }
 
-
-std::shared_ptr<Variable> Evaluator::EvaluateSqrt(std::shared_ptr<LexemeInterface> root) const
-{
-	auto root_func = std::static_pointer_cast<LexemeFunc>(root);
-	return m_operations_.Evaluate(root->value(), std::vector<std::shared_ptr<Variable>>{EvaluateExpression(root_func->body())});
-}
-
-std::shared_ptr<Variable> Evaluator::EvaluateLogicalNot(std::shared_ptr<LexemeInterface> root) const
-{
-	auto root_func = std::static_pointer_cast<LexemeFunc>(root);
-	return m_operations_.Evaluate(root->value(), std::vector<std::shared_ptr<Variable>>{EvaluateExpression(root_func->body())});
-
-}
-
 std::shared_ptr<Variable> Evaluator::EvaluateUnaryOperation(std::shared_ptr<LexemeInterface> root) const
 {
 	auto root_func = std::static_pointer_cast<LexemeFunc>(root);
@@ -100,7 +86,7 @@ void Evaluator::EvaluateIfElse(std::shared_ptr<LexemeInterface> if_st)
 {
 	auto if_lexem = std::static_pointer_cast<LexemeCondition>(if_st);
 
-	auto condition_result = EvaluateExpression(if_lexem->conidition()->root());
+	auto condition_result = EvaluateExpression(if_lexem->condition()->root());
 	assert(condition_result->type() == VariableType::kBool && "Invalid condition");
 	auto condition = std::static_pointer_cast<VariableBool>(condition_result)->value();
 	if (condition)
