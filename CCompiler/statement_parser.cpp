@@ -26,7 +26,6 @@ std::shared_ptr<Statement> StatementParser::Parse(const std::vector<std::shared_
 	if (Grammar::IsPunctuator(lexems.back()->type()))
 	{
 		is_punctuater = 1;
-		statement->set_punctuator(lexems.back());
 	}
 
 	statement->set_root(InnerStatParse(nullptr, WhereAttachCh::kUnknown, lexems.rbegin() + is_punctuater, lexems.rend() - is_var_decl));

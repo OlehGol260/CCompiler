@@ -12,7 +12,7 @@ int main()
 print(bool_);\
        bool pnh = !true;\
 if (!pnh) {\
-print(\"pnh\");\
+print(\"pnh\n\");\
 }\
 		int a = 4;\
 		 int b = 21;\
@@ -20,7 +20,7 @@ print(\"pnh\");\
 		 float x1 = 0;\
 		 float x2 = 0;\
 		 int D = b * b - 4 * a * c; \
-		 if (!(D > 0 || D == 0))\
+		 if ((D > 0 || D == 0))\
 		 {\
 			 x1 = ((0 - b) + sqrt(D)) / (2 * a);\
 			 x2 = ((0 - b) - sqrt(D)) / (2 * a);\

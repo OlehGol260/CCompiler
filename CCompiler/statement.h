@@ -19,29 +19,12 @@ public:
 		Set root_ member with lexem
 		\param lexem root node of the statement
 	*/
-	explicit Statement(std::shared_ptr<LexemeInterface> lexem) : root_(lexem), punctuator_(nullptr) {}
+	explicit Statement(std::shared_ptr<LexemeInterface> lexem) : root_(lexem) {} 
 
 	/*!
 		Default destructor
 	*/
 	~Statement() = default;
-
-	/*!
-		Checks if current statement has a punctuator
-	*/
-	bool HasPunctuator() const noexcept { return punctuator_ != nullptr; }
-
-	/*!
-		Getter for punctuator
-		\return punctuator lexeme
-	*/
-	auto punctuator() const noexcept { return punctuator_; }
-	/*!
-		Setter for punctuator
-		\param p punctuator lexeme
-	*/
-	void set_punctuator(std::shared_ptr<LexemeInterface> p) { punctuator_ = std::static_pointer_cast<Lexeme>(p); }
-
 	/*!
 		Setter for root
 		\param p root lexeme
@@ -68,7 +51,6 @@ public:
 
 private:
 	std::shared_ptr<LexemeInterface> root_; /*!< hold Lexeme object with the actual asyntax tree */
-	std::shared_ptr<LexemeInterface> punctuator_; /*!< hold Lexeme object with the punctuator */
 
 	 //workaround to work with variable initialization
 	 //this var will hold tree of type

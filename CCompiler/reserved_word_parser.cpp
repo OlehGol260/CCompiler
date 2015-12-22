@@ -104,7 +104,6 @@ std::shared_ptr<Statement> ReservedWordParser::ParsePrint(const std::vector<std:
 	print_st->set_root(print);
 	auto print_st_semicolon = lexems.back();
 	assert(Grammar::IsPunctuator(print_st_semicolon->type()) && "Print statement must end with semicolon");
-	print_st->set_punctuator(print_st_semicolon);
 	return print_st;
 }
 
