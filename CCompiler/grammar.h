@@ -21,7 +21,7 @@ public:
 	template<typename T>
 	static bool IsOperator(const T& t)
 	{
-		return IsBinaryOperator(t) || IsBracket(t)||  IsLogicalNot(t) ||
+		return IsBinaryOperator(t) || IsBracket(t)||  IsUnaryOperator(t) || IsLogicalNot(t) ||
 			IsPunctuator(t) || IsVarType(t) || IsDoubleQuote(t);
 	}
 
@@ -46,6 +46,7 @@ public:
 	static bool IsVarType(const std::string& to_check);
 	static bool IsLogicalNot(const std::string& to_check);
 	static bool IsBinaryOperator(const std::string& to_check);
+	static bool IsUnaryOperator(const std::string& to_check);
 	static bool IsOpenBrace(const std::string& to_check);
 	static bool IsCloseBrace(const std::string& to_check);
 	static bool IsOpenParenthesis(const std::string& to_check);
@@ -65,6 +66,7 @@ public:
 	static bool IsSqrt(const LexemeType& t);
 	static bool IsDoubleQuote(const std::string& to_check);
 	static bool IsBinaryOperator(const LexemeType& t);
+	static bool IsUnaryOperator(const LexemeType& t);
 	static bool IsReservedWord(const LexemeType& t);
 	static bool IsAssignment(const LexemeType& t);
 	static bool IsPunctuator(const LexemeType& t);
@@ -129,6 +131,7 @@ private:
 	static const std::string kFor_;
 	static const std::string kWhile_;
 	static const std::vector<std::string> kBinaryOperators;
+	static const std::vector<std::string> kUnaryOperators;
 	static const std::vector<std::string> kTypes_;
 	static const std::string kAssignment_;
 	static const std::string kPunctuator_;

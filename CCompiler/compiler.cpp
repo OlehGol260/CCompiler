@@ -22,7 +22,5 @@ void Compiler::InnerCompile(const std::string& code)
 	auto parsed_roots = m_parser_.main_context()->roots();
 	m_obfuscator_.Obfuscate(parsed_roots);
 	m_translator_.Translate(parsed_roots);
-	
 	m_evaluater_.Evaluate(parsed_roots);
-	
 }

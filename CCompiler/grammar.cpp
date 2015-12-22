@@ -31,6 +31,11 @@ const std::vector<std::string> Grammar::kTypes_ = {
 };
 
 //ORDER MATTERS
+const std::vector<std::string> Grammar::kUnaryOperators = {
+	"!"
+};
+
+//ORDER MATTERS
 const std::vector<std::string> Grammar::kBinaryOperators = {
 	"=",
 	"||",
@@ -109,10 +114,20 @@ bool Grammar::IsBinaryOperator(const std::string& to_check)
 	return IsInVector(to_check, kBinaryOperators);
 }
 
+bool Grammar::IsUnaryOperator(const std::string& to_check)
+{
+	return IsInVector(to_check, kUnaryOperators);
+}
+
 bool Grammar::IsBinaryOperator(const LexemeType& t)
 {
 	//TODO: WORKAROUND, may be reconsidered
 	return t == LexemeType::kBinaryOperator || t == LexemeType::kAssignment;
+}
+
+bool Grammar::IsUnaryOperator(const LexemeType& t)
+{
+	return t == LexemeType::kUnaryOperator;
 }
 
 bool Grammar::IsReservedWord(const LexemeType& t)

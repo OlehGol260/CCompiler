@@ -1,5 +1,5 @@
 ﻿#include "statement_parser.h"
-
+#include <limits>
 #include "grammar.h"
 #include "lexeme.h"
 #include "lexeme_func.h"
@@ -53,7 +53,6 @@ std::shared_ptr<LexemeInterface> StatementParser::InnerStatParse(std::shared_ptr
 			if (curr_level == result_token->level() && Grammar::IsBinaryOperator(result_token->type()) && result_token->value() == *it_bin)
 			{
 				InnerStatParse(result_token, WhereAttachCh::kLeft, it_tok + 1, rend); // +1 - not include current token,
-				auto a = it_tok - 1;
 				InnerStatParse(result_token, WhereAttachCh::kRight, rbegin, it_tok); // condition it_tok != rend in the inner loop, doesn't require +1 here
 				found_needed_op = true;
  			}
@@ -61,6 +60,7 @@ std::shared_ptr<LexemeInterface> StatementParser::InnerStatParse(std::shared_ptr
 	}
 	
 	auto result_token_type = result_token->type();
+
 	if (Grammar::IsSqrt(result_token_type) || Grammar::IsLogicalNot(result_token_type))
 	{
 		auto result_token_func = std::static_pointer_cast<LexemeFunc>(result_token);
@@ -79,9 +79,10 @@ std::shared_ptr<LexemeInterface> StatementParser::InnerStatParse(std::shared_ptr
 	}
 	return parent;
 }
+
 int StatementParser::GetLowestLevel(lexeme_interfaces_reverse_iter rbegin, lexeme_interfaces_reverse_iter rend)
 {
-	auto min_lvl = 100000;
+	auto min_lvl = std::numeric_limits<int>::max();
 	for (auto it = rbegin; it != rend ; ++it)
 	{
 		auto curr = *it;
